@@ -1,3 +1,20 @@
+<a name="1.0.17"></a>
+## [1.0.17](https://github.com/advanced-rest-client/paper-autocomplete/compare/1.0.16...v1.0.17) (2017-03-02)
+
+
+### Docs
+
+* updated documentation~ ([eb09369947cd6fd2dc8f70d88b6e78c5bfd772db](https://github.com/advanced-rest-client/paper-autocomplete/commit/eb09369947cd6fd2dc8f70d88b6e78c5bfd772db))
+
+### Update
+
+* Added new property declaration to make the Polymer linter happy :) ([32500199d6a1d7b6f762796a7ffb4295652dfdd0](https://github.com/advanced-rest-client/paper-autocomplete/commit/32500199d6a1d7b6f762796a7ffb4295652dfdd0))
+* Added tests for interactions ([8839707b297ef545ed8d65f0cfa38ab065ce461d](https://github.com/advanced-rest-client/paper-autocomplete/commit/8839707b297ef545ed8d65f0cfa38ab065ce461d))
+* Added the selected event cancelation to prevent the element to update the target input field ([2974c3e6e9089e99bccac174d661d3c2b51d70d0](https://github.com/advanced-rest-client/paper-autocomplete/commit/2974c3e6e9089e99bccac174d661d3c2b51d70d0))
+* updated travis configuration - added sauce keys. ([d85cae1269326c1fa824e8a249a51af59e986c44](https://github.com/advanced-rest-client/paper-autocomplete/commit/d85cae1269326c1fa824e8a249a51af59e986c44))
+
+
+
 <a name="1.0.16"></a>
 ## [1.0.16](https://github.com/advanced-rest-client/paper-autocomplete/compare/1.0.15...v1.0.16) (2017-02-14)
 
