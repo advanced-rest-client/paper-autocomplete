@@ -261,7 +261,10 @@ Polymer({
     openOnFocus: {
       type: Boolean,
       value: false
-    }
+    },
+    // this property is set when the `target` changes. It is used to remove
+    // listeners.
+    _oldTarget: HTMLElement
   },
 
   observers: [
