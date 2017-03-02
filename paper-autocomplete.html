@@ -86,6 +86,10 @@ source suggestions to filter suggestions from.
 However, if the user change the query entirely it will fire `query` event
 and the app will expect to `source` to change. Setting source is not mandatory.
 
+## Preventing from changing the input value
+To prevent the element to update the value of the target input, listent for
+`selected` event and cancel it by calling `event.preventDefault()` function.
+
 ## Styling
 
 Suggestions are positioned absolutely! You must include relative positioned parent to contain the suggestion
@@ -109,11 +113,11 @@ Install the element:
 
 Use [Polyserve](https://github.com/PolymerLabs/polyserve) to run the demo:
 
-    npm install -g polyserve
+    npm install -g polymer-cli
 
 And:
 
-    polyserve
+    polymer serve
 
 Once running, you can preview your element at
 http://localhost:8080/components/paper-autocomplete/
@@ -437,14 +441,21 @@ Polymer({
     if (typeof value !== 'string') {
       value = value.value;
     }
-
-    this.target.value = value;
     this.async(function() {
-      this.fire('selected', {
-        value: value
-      });
-      this.close();
+      this._inform(value);
+    }, 1);
+  },
+
+  _inform: function(value) {
+    var e = this.fire('selected', {
+      value: value
+    }, {
+      cancelable: true
     });
+    if (!e.defaultPrevented) {
+      this.target.value = value;
+    }
+    this.close();
   },
   /**
    * Ensure that the selected item is visible in the scroller.
