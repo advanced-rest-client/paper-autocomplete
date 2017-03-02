@@ -9,108 +9,213 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <script src="../../web-component-tester/browser.js"></script>
-    <script src="../../iron-test-helpers/test-helpers.js"></script>
-    <script src="../../iron-test-helpers/mock-interactions.js"></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+  <script src="../../iron-test-helpers/test-helpers.js"></script>
+  <script src="../../iron-test-helpers/mock-interactions.js"></script>
+  <!-- Step 1: import the element to test -->
+  <link rel="import" href="../paper-autocomplete.html">
+</head>
 
-    <!-- Step 1: import the element to test -->
-    <link rel="import" href="../paper-autocomplete.html">
-  </head>
-  <body>
+<body>
+  <test-fixture id="basic">
+    <template>
+      <paper-autocomplete></paper-autocomplete>
+    </template>
+  </test-fixture>
+  <test-fixture id="input">
+    <template>
+      <paper-autocomplete id="fruitsSuggestions"></paper-autocomplete>
+    </template>
+  </test-fixture>
+  <script>
+  function notifyInput(target) {
+    var ev = document.createEvent('Event');
+    ev.initEvent('input', true, false);
+    target.dispatchEvent(ev);
+  }
+  /* global assert, fixture */
+  suite('basic', function() {
+    var suggestions;
 
-    <test-fixture id="basic">
-      <template>
-        <paper-autocomplete></paper-autocomplete>
-      </template>
-    </test-fixture>
-
-    <test-fixture id="input">
-      <template>
-        <paper-autocomplete id="fruitsSuggestions"></paper-autocomplete>
-      </template>
-    </test-fixture>
-
-    <script>
-    function notifyInput(target) {
-      var ev = document.createEvent('Event');
-      ev.initEvent('input', true, false);
-      target.dispatchEvent(ev);
-    }
-    /* global assert, fixture */
-    suite('basic', function() {
-      var suggestions;
-
-      setup(function() {
-        suggestions = fixture('basic');
-      });
-
-      test('`target` should be undefined', function() {
-        assert.equal(suggestions.target, undefined, 'editor.target equals undefined');
-      });
-
-      test('`source` should be undefined', function() {
-        assert.equal(suggestions.source, undefined, 'editor.source equals undefined');
-      });
+    setup(function() {
+      suggestions = fixture('basic');
     });
 
-    suite('input', function() {
-      var suggestions;
+    test('`target` should be undefined', function() {
+      assert.equal(suggestions.target, undefined, 'editor.target equals undefined');
+    });
 
-      setup(function() {
-        suggestions = fixture('input');
-      });
+    test('`source` should be undefined', function() {
+      assert.equal(suggestions.source, undefined, 'editor.source equals undefined');
+    });
+  });
 
-      test('Should query on input change', function() {
-        var input = document.createElement('input');
-        suggestions.target = input;
-        input.value = 'test';
-        notifyInput(input);
-        assert.equal(input.value, suggestions._previousQuery,
-          'editor.value equals suggestions._previousQuery');
-      });
+  suite('input', function() {
+    var suggestions;
 
-      test('Should fire query event', function(done) {
-        var word = 'TEST';
-        var clb = function(e) {
-          suggestions.removeEventListener('parsed', clb);
-          var query = e.detail.value;
-          assert.equal(word, query,
-            'word equals query');
+    setup(function() {
+      suggestions = fixture('input');
+    });
+
+    test('Should query on input change', function() {
+      var input = document.createElement('input');
+      suggestions.target = input;
+      input.value = 'test';
+      notifyInput(input);
+      assert.equal(input.value, suggestions._previousQuery,
+        'editor.value equals suggestions._previousQuery');
+    });
+
+    test('Should fire query event', function(done) {
+      var word = 'TEST';
+      var clb = function(e) {
+        suggestions.removeEventListener('parsed', clb);
+        var query = e.detail.value;
+        assert.equal(word, query,
+          'word equals query');
+        done();
+      };
+      var input = document.createElement('input');
+      suggestions.target = input;
+      input.value = word;
+      suggestions.addEventListener('query', clb);
+      notifyInput(input);
+    });
+
+    test('Should filter suggestions', function(done) {
+      var word = 'TEST';
+      var clb = function() {
+        suggestions.removeEventListener('query', clb);
+        suggestions.source = [word, word + '2', 'etra73hxis'];
+        setTimeout(function() {
+          assert.equal(suggestions.suggestions.length, 2,
+            'suggestions.suggestions.length equals 2');
+          assert.equal(suggestions.opened, true,
+            'suggestions.opened equals true');
           done();
-        };
-        var input = document.createElement('input');
-        suggestions.target = input;
-        input.value = word;
-        suggestions.addEventListener('query', clb);
-        notifyInput(input);
-      });
-      test('Should filter suggestions', function(done) {
-        var word = 'TEST';
-        var clb = function() {
-          suggestions.removeEventListener('parsed', clb);
-          suggestions.source = [word, word + '2', 'etra73hxis'];
-          setTimeout(function() {
-            assert.equal(suggestions.suggestions.length, 2,
-              'suggestions.suggestions.length equals 2');
-            assert.equal(suggestions.opened, true,
-                'suggestions.opened equals true');
-            done();
-          }, 1);
-        };
-        var input = document.createElement('input');
-        suggestions.target = input;
-        input.value = word;
-        suggestions.addEventListener('query', clb);
-        notifyInput(input);
-      });
+        }, 1);
+      };
+      var input = document.createElement('input');
+      suggestions.target = input;
+      input.value = word;
+      suggestions.addEventListener('query', clb);
+      notifyInput(input);
     });
-    // TODO: interaction tests
-    </script>
+  });
 
-  </body>
+  suite('suggestions', function() {
+    var suggestions;
+    var input;
+    var source = ['Apple', 'Appli' ,'Applo'];
+
+    setup(function(done) {
+      suggestions = fixture('input');
+      suggestions.source = source;
+      input = document.createElement('input');
+      suggestions.target = input;
+      setTimeout(done, 1);
+    });
+
+    test('Should compute suggestions list', function() {
+      input.value = 'App';
+      notifyInput(input);
+      assert.equal(suggestions.suggestions.length, 3);
+    });
+
+    test('Should select first item on start.', function(done) {
+      var repeater = Polymer.dom(suggestions.root).querySelector('#repeater');
+      var selector = Polymer.dom(suggestions.root).querySelector('#selector');
+      input.value = 'App';
+      notifyInput(input);
+      setTimeout(function() {
+        var value = repeater.itemForElement(selector.selectedItem);
+        assert.equal(value, source[0]);
+        done();
+      }, 100);
+    });
+
+    test('Should select `next` suggestion.', function(done) {
+      var repeater = Polymer.dom(suggestions.root).querySelector('#repeater');
+      var selector = Polymer.dom(suggestions.root).querySelector('#selector');
+      input.value = 'App';
+      notifyInput(input);
+      setTimeout(function() {
+        suggestions.selectNext();
+        var value = repeater.itemForElement(selector.selectedItem);
+        assert.equal(value, source[1]);
+        done();
+      }, 100);
+    });
+
+    test('Should select `previous` suggestion.', function(done) {
+      var repeater = Polymer.dom(suggestions.root).querySelector('#repeater');
+      var selector = Polymer.dom(suggestions.root).querySelector('#selector');
+      input.value = 'App';
+      notifyInput(input);
+      setTimeout(function() {
+        suggestions.selectPrevious();
+        var value = repeater.itemForElement(selector.selectedItem);
+        assert.equal(value, source[2]);
+        done();
+      }, 100);
+    });
+
+    test('Should fire `selected` event.', function(done) {
+      var clb = function() {
+        suggestions.removeEventListener('selected', clb);
+        done();
+      };
+
+      input.value = 'App';
+      suggestions.addEventListener('selected', clb);
+      notifyInput(input);
+      setTimeout(function() {
+        suggestions.acceptSelection();
+      }, 100);
+    });
+
+    test('Should update the input field.', function(done) {
+      var clb = function() {
+        suggestions.removeEventListener('selected', clb);
+        setTimeout(function() {
+          assert.equal(input.value, 'Apple');
+          done();
+        }, 1);
+      };
+
+      input.value = 'App';
+      suggestions.addEventListener('selected', clb);
+      notifyInput(input);
+      setTimeout(function() {
+        suggestions.acceptSelection();
+      }, 100);
+    });
+
+    test('Should not update the input field.', function(done) {
+      var clb = function(e) {
+        e.preventDefault();
+        suggestions.removeEventListener('selected', clb);
+
+        setTimeout(function() {
+          assert.equal(input.value, 'App');
+          done();
+        }, 1);
+      };
+
+      input.value = 'App';
+      suggestions.addEventListener('selected', clb);
+      notifyInput(input);
+      setTimeout(function() {
+        suggestions.acceptSelection();
+      }, 100);
+    });
+  });
+  </script>
+</body>
+
 </html>

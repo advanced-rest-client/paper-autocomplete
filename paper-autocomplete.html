@@ -103,25 +103,6 @@ for styling:
 ----------------|-------------|----------
 | `--paper-autocomplete` | Mixin applied to the display | `{}` |
 
-## Install and use
-
-Install the element:
-
-    bower install jarrodek/paper-autocomplete
-
-## Demo
-
-Use [Polyserve](https://github.com/PolymerLabs/polyserve) to run the demo:
-
-    npm install -g polymer-cli
-
-And:
-
-    polymer serve
-
-Once running, you can preview your element at
-http://localhost:8080/components/paper-autocomplete/
-
 @group UI Elements
 @element paper-autocomplete
 @demo demo/index.html
@@ -284,7 +265,7 @@ Polymer({
 
   observers: [
     '_targetChanged(target, isAttached)',
-    '_filterSuggestions(source)'
+    '_filterSuggestions(source, _oldTarget, isAttached)'
   ],
 
   listeners: {
@@ -352,9 +333,9 @@ Polymer({
   },
   /**
    * Filter `source` array for current value.
-   * @return {[type]} [description]
    */
   _filterSuggestions: function() {
+    //source, _oldTarget, isAttached
     if (!this.isAttached || !this._oldTarget) {
       return;
     }
@@ -506,7 +487,7 @@ Polymer({
       return;
     }
     this._previousQuery = this._previousQuery || '';
-    this.async(this._valueChanged, 200);
+    this.async(this._valueChanged, 100);
   }
 });
 </script>
