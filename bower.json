@@ -2,7 +2,7 @@
   "name": "paper-autocomplete",
   "description": "Paper autocomplete element to be used with paper-, iron- and regular inputs.",
   "license": "Apache-2.0",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "authors": [
     "Pawel Psztyc <jarrodek@gmail.com>",
     "The Advanced REST Client authors"
