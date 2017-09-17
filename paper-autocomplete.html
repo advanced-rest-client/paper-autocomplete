@@ -141,9 +141,9 @@ for styling:
     <iron-a11y-keys id="a11y" target="[[target]]" keys="up" on-keys-pressed="selectPrevious"></iron-a11y-keys>
     <iron-a11y-keys id="a11y" target="[[target]]" keys="down" on-keys-pressed="selectNext"></iron-a11y-keys>
     <iron-a11y-keys id="a11y" target="[[target]]" keys="enter" on-keys-pressed="acceptSelection"></iron-a11y-keys>
-    <iron-a11y-keys id="a11y" target="[[this]]" keys="up" on-keys-pressed="selectPrevious"></iron-a11y-keys>
-    <iron-a11y-keys id="a11y" target="[[this]]" keys="down" on-keys-pressed="selectNext"></iron-a11y-keys>
-    <iron-a11y-keys id="a11y" target="[[this]]" keys="enter" on-keys-pressed="acceptSelection"></iron-a11y-keys>
+    <iron-a11y-keys id="a11y" target="[[_keyTarget]]" keys="up" on-keys-pressed="selectPrevious"></iron-a11y-keys>
+    <iron-a11y-keys id="a11y" target="[[_keyTarget]]" keys="down" on-keys-pressed="selectNext"></iron-a11y-keys>
+    <iron-a11y-keys id="a11y" target="[[_keyTarget]]" keys="enter" on-keys-pressed="acceptSelection"></iron-a11y-keys>
   </template>
 </dom-module>
 <script>
@@ -264,7 +264,14 @@ Polymer({
     },
     // this property is set when the `target` changes. It is used to remove
     // listeners.
-    _oldTarget: HTMLElement
+    _oldTarget: HTMLElement,
+    // An event target for key down event.
+    _keyTarget: {
+      type: HTMLElement,
+      value: function() {
+        return this;
+      }
+    }
   },
 
   observers: [
@@ -285,6 +292,7 @@ Polymer({
     if (this._oldTarget) {
       this.unlisten(this._oldTarget, 'input', '_valueChanged');
       this.unlisten(this._oldTarget, 'focus', '_targetFocus');
+      this.unlisten(this._oldTarget, 'click', '_targetClick');
       this._oldTarget = null;
     }
     if (!target) {
@@ -297,6 +305,7 @@ Polymer({
     } else if (target) {
       this.listen(target, 'input', '_valueChanged');
       this.listen(target, 'focus', '_targetFocus');
+      this.listen(target, 'click', '_targetClick');
       this._oldTarget = target;
       if (target === document.activeElement) {
         this._targetFocus();
@@ -491,7 +500,19 @@ Polymer({
       return;
     }
     this._previousQuery = this._previousQuery || '';
-    this.async(this._valueChanged, 100);
+    this.debounce('autocomplete-focus', this._valueChanged, 100);
+  },
+  /**
+   * Prohibits click event propagation when the overlay is opened so
+   * the overlay manager won't close it immidietly after focusing (with click
+   * event included) in the target field.
+   */
+  _targetClick: function(e) {
+    if (!this.opened) {
+      return;
+    }
+    e.stopPropagation();
+    e.stopImmediatePropagation();
   }
 });
 </script>

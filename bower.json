@@ -44,13 +44,12 @@
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
-    "web-component-tester": "*",
+    "web-component-tester": "^6.0.0",
     "paper-styles": "PolymerElements/paper-styles#^1.0.2",
     "paper-input": "PolymerElements/paper-input#*",
     "chance": "^1.0.0",
-    "chrome-app-livereload": "bestander/chrome-app-livereload#~0.0.5",
-    "test-fixture": "PolymerElements/test-fixture#^1.0.0",
+    "test-fixture": "PolymerElements/test-fixture#^3.0.0",
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
-    "iron-test-helpers": "PolymerElements/iron-test-helpers#^1.0.0"
+    "iron-test-helpers": "PolymerElements/iron-test-helpers#^1.4.0"
   }
 }
