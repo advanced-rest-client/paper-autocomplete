@@ -1,3 +1,18 @@
+<a name="1.0.18"></a>
+## [1.0.18](https://github.com/advanced-rest-client/paper-autocomplete/compare/1.0.17...1.0.18) (2017-09-17)
+
+
+### Fix
+
+* Fixing focusing problem when overlay was canceled by click event ([f1a355478058490b67f84369a18d7fde7131075b](https://github.com/advanced-rest-client/paper-autocomplete/commit/f1a355478058490b67f84369a18d7fde7131075b))
+* Making linter happy again! :) ([aef75849f9ac1ee3d8d4224e520e6581170d65fc](https://github.com/advanced-rest-client/paper-autocomplete/commit/aef75849f9ac1ee3d8d4224e520e6581170d65fc))
+
+### Update
+
+* Updated tests configuration. ([8dcbc42c30c7280e2043cc6c4dc90adca13037cf](https://github.com/advanced-rest-client/paper-autocomplete/commit/8dcbc42c30c7280e2043cc6c4dc90adca13037cf))
+
+
+
 <a name="1.0.17"></a>
 ## [1.0.17](https://github.com/advanced-rest-client/paper-autocomplete/compare/1.0.16...v1.0.17) (2017-03-02)
 
