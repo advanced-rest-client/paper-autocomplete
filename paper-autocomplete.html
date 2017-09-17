@@ -285,6 +285,7 @@ Polymer({
     if (this._oldTarget) {
       this.unlisten(this._oldTarget, 'input', '_valueChanged');
       this.unlisten(this._oldTarget, 'focus', '_targetFocus');
+      this.unlisten(this._oldTarget, 'click', '_targetClick');
       this._oldTarget = null;
     }
     if (!target) {
@@ -297,6 +298,7 @@ Polymer({
     } else if (target) {
       this.listen(target, 'input', '_valueChanged');
       this.listen(target, 'focus', '_targetFocus');
+      this.listen(target, 'click', '_targetClick');
       this._oldTarget = target;
       if (target === document.activeElement) {
         this._targetFocus();
@@ -491,7 +493,19 @@ Polymer({
       return;
     }
     this._previousQuery = this._previousQuery || '';
-    this.async(this._valueChanged, 100);
+    this.debounce('autocomplete-focus', this._valueChanged, 100);
+  },
+  /**
+   * Prohibits click event propagation when the overlay is opened so
+   * the overlay manager won't close it immidietly after focusing (with click
+   * event included) in the target field.
+   */
+  _targetClick: function(e) {
+    if (!this.opened) {
+      return;
+    }
+    e.stopPropagation();
+    e.stopImmediatePropagation();
   }
 });
 </script>
