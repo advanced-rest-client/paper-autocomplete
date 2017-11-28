@@ -500,7 +500,7 @@ Polymer({
       return;
     }
     this._previousQuery = this._previousQuery || '';
-    this.debounce('autocomplete-focus', this._valueChanged, 100);
+    this.debounce('autocomplete-focus', this._valueChanged, 20);
   },
   /**
    * Prohibits click event propagation when the overlay is opened so
