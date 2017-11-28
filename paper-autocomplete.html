@@ -392,6 +392,7 @@ Polymer({
       return 0;
     });
     this._setSuggestions(filtered);
+    this.notifyResize();
     this.opened = true;
   },
   /* Compute suggestion display value */
