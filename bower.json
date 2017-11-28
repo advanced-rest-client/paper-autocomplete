@@ -46,7 +46,7 @@
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
     "web-component-tester": "^6.0.0",
     "paper-styles": "PolymerElements/paper-styles#^1.0.2",
-    "paper-input": "PolymerElements/paper-input#*",
+    "paper-input": "PolymerElements/paper-input#<2",
     "chance": "^1.0.0",
     "test-fixture": "PolymerElements/test-fixture#^3.0.0",
     "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
