@@ -13,7 +13,8 @@
   },
   "devDependencies": {
     "bower": "^1.8.0",
-    "polymer-cli": "^1.2.0"
+    "polymer-cli": "^1.2.0",
+    "shady-css-parser": "^0.1.0"
   },
   "private": false
 }
