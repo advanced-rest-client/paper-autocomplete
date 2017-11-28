@@ -22,9 +22,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../paper-input/paper-input.html">
   <link rel="import" href="../paper-autocomplete.html">
   <style>
-    .form .form-row paper-autocomplete {
-      top: 32px;
-    }
+  .form .form-row paper-autocomplete {
+    top: 32px;
+  }
   </style>
 </head>
 
@@ -68,15 +68,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
       <paper-button raised on-tap="appendListItem">Add</paper-button>
     </div>
+
+    <div class="vertical-section vertical-section-container centered relative">
+      <p>Autocomplete can be positioned</p>
+      <div class="relative">
+        <paper-input label="Enter fruit name" id="fruitsPositioned"></paper-input>
+        <paper-autocomplete open-on-focus target="[[positionTarget]]" position-target="[[positionTarget]]" dynamic-align vertical-align="top" horizontal-align="left" vertical-offset="56" source="[[suggestions]]"></paper-autocomplete>
+      </div>
+    </div>
+
   </template>
   <script src="../../chance/chance.js"></script>
   <script>
+    /* global chance */
     var demo = document.querySelector('template');
     demo.selectedCounter = 0;
     demo.queryCounter = 0;
     demo.addEventListener('dom-change', function() {
       var suggestions = ['Apple', 'Apricot', 'Avocado',
-      'Banana', 'Bilberry', 'Blackberry', ,'Blackcurrant', 'Blueberry',
+      'Banana', 'Bilberry', 'Blackberry', 'Blackcurrant', 'Blueberry',
       'Boysenberry', 'Cantaloupe', 'Currant', 'Cherry', 'Cherimoya',
       'Cloudberry', 'Coconut', 'Cranberry', 'Damson', 'Date', 'Dragonfruit',
       'Durian', 'Elderberry', 'Feijoa', 'Fig', 'Goji berry', 'Gooseberry',
@@ -124,9 +134,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       elm.target = e.target;
     };
-    demo.appendListItem = function(e) {
+    demo.appendListItem = function() {
       demo.push('list', {name: ''});
     };
+    demo.init = function() {
+      demo.positionTarget = document.getElementById('fruitsPositioned');
+    };
+    window.addEventListener('WebComponentsReady', function() {
+      demo.init();
+    });
   </script>
 
 </body>

@@ -392,6 +392,8 @@ Polymer({
       return 0;
     });
     this._setSuggestions(filtered);
+    this.notifyResize();
+    this._ensureSelection();
     this.opened = true;
   },
   /* Compute suggestion display value */
@@ -428,7 +430,8 @@ Polymer({
    * Accepts currently selected suggestion and enters it into a text field.
    */
   acceptSelection: function() {
-    if (!this.opened || !this.suggestions || !this.suggestions.length) {
+    if (!this.opened || !this.suggestions || !this.suggestions.length ||
+      !this.$.selector.selectedItem) {
       return;
     }
     var value = this.$.repeater.itemForElement(this.$.selector.selectedItem);
@@ -500,7 +503,7 @@ Polymer({
       return;
     }
     this._previousQuery = this._previousQuery || '';
-    this.debounce('autocomplete-focus', this._valueChanged, 100);
+    this.debounce('autocomplete-focus', this._valueChanged, 20);
   },
   /**
    * Prohibits click event propagation when the overlay is opened so
@@ -513,6 +516,16 @@ Polymer({
     }
     e.stopPropagation();
     e.stopImmediatePropagation();
+  },
+  /**
+   * Selects a first available item after filtering results and missing
+   * selection.
+   */
+  _ensureSelection: function() {
+    if (this.$.selector.selectedItem) {
+      return;
+    }
+    this.$.selector.selected = 0;
   }
 });
 </script>

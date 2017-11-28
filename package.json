@@ -1,6 +1,6 @@
 {
   "name": "paper-autocomplete",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "license": "Apache-2.0",
   "description": "Paper autocomplete element to be used with paper-, iron- and regular inputs.",
   "scripts": {
@@ -13,7 +13,8 @@
   },
   "devDependencies": {
     "bower": "^1.8.0",
-    "polymer-cli": "^1.2.0"
+    "polymer-cli": "^1.2.0",
+    "shady-css-parser": "^0.1.0"
   },
   "private": false
 }

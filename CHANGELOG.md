@@ -1,3 +1,24 @@
+<a name="1.0.20"></a>
+## [1.0.20](https://github.com/advanced-rest-client/paper-autocomplete/compare/1.0.18...1.0.20) (2017-11-28)
+
+
+### Fix
+
+* Added missing polymer dependency for linter ([9ae9cb05fd1b0815ed90bfa16a3c42e145c07181](https://github.com/advanced-rest-client/paper-autocomplete/commit/9ae9cb05fd1b0815ed90bfa16a3c42e145c07181))
+* Fixed element positioning when list size changes ([6b1cbfbfd612f2ef29651bbffe5a693bc4a3545c](https://github.com/advanced-rest-client/paper-autocomplete/commit/6b1cbfbfd612f2ef29651bbffe5a693bc4a3545c))
+* Fixed error caused by lack of selection after filtering ([69b426711b6ce36abbd3a3110637a39c033da262](https://github.com/advanced-rest-client/paper-autocomplete/commit/69b426711b6ce36abbd3a3110637a39c033da262))
+
+### New
+
+* Added demo for positioning the lement. ([0d5234a76376577d500a46870233d32270de250d](https://github.com/advanced-rest-client/paper-autocomplete/commit/0d5234a76376577d500a46870233d32270de250d))
+
+### Update
+
+* Reduced debouncer time. ([099307a1d654aaa57097463d679035c00106cc2d](https://github.com/advanced-rest-client/paper-autocomplete/commit/099307a1d654aaa57097463d679035c00106cc2d))
+* Updated dev-dependency version ([e12cf48211bd68e55c90967af867e7e47fdff423](https://github.com/advanced-rest-client/paper-autocomplete/commit/e12cf48211bd68e55c90967af867e7e47fdff423))
+
+
+
 <a name="1.0.19"></a>
 ## [1.0.19](https://github.com/advanced-rest-client/paper-autocomplete/compare/1.0.18...1.0.19) (2017-09-17)
 
