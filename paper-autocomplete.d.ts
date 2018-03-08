@@ -18,7 +18,7 @@
 /// <reference path="../iron-scroll-target-behavior/iron-scroll-target-behavior.d.ts" />
 /// <reference path="../paper-progress/paper-progress.d.ts" />
 
-declare namespace UI Elements {
+declare namespace UIElements {
 
   /**
    * # `<paper-autocomplete>`
@@ -273,5 +273,5 @@ declare namespace UI Elements {
 }
 
 interface HTMLElementTagNameMap {
-  "paper-autocomplete": UI Elements.PaperAutocomplete;
+  "paper-autocomplete": UIElements.PaperAutocomplete;
 }
