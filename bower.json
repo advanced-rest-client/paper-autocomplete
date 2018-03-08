@@ -2,7 +2,7 @@
   "name": "paper-autocomplete",
   "description": "Paper autocomplete element to be used with paper-, iron- and regular inputs.",
   "license": "Apache-2.0",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "authors": [
     "Pawel Psztyc <jarrodek@gmail.com>",
     "The Advanced REST Client authors"
@@ -15,7 +15,7 @@
     "suggestions"
   ],
   "private": true,
-  "main":"paper-autocomplete.html",
+  "main": "paper-autocomplete.html",
   "repository": {
     "type": "git",
     "url": "git@github.com:advanced-rest-client/paper-autocomplete.git"
