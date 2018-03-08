@@ -1,6 +1,6 @@
 {
   "name": "@api-components/paper-autocomplete",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "license": "Apache-2.0",
   "description": "Paper autocomplete element to be used with paper-, iron- and regular inputs.",
   "scripts": {
