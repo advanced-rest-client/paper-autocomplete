@@ -1,0 +1,3553 @@
+{
+  "schema_version": "1.0.0",
+  "elements": [
+    {
+      "description": "# `<paper-autocomplete>`\n\nUse `paper-autocomplete` to add autocomplete functionality to the input elements.\nIt also works wilt polymer inputs.\n\nThe element works with static list of suggestions or with dynamic (asynchronous)\noperation that require calling te backend or local datastore.\nIn second case you should set `loader` property which will display a loader animation\nwhile results are loaded.\n\nYou must associate suggestions with the input field. This can be done by passing\nan element reference to the `target` property.\n\n## Example:\n\n### Static suggestions\n\n```html\n<paper-input label=\"Enter fruit name\" id=\"fruits\"></paper-input>\n<paper-autocomplete\n id=\"fruitsSuggestions\"\n target=\"[[fruits]]\"\n on-selected=\"_fruitSelected\"></paper-input-autocomplete>\n\n<script>\ndocument.querySelector('#fruitsSuggestions').source = ['Apple', 'Orange', 'Bananas'];\n< /script>\n```\n\n### Dynamic suggestions\n\n```html\n<paper-input-container>\n <label>Enter friut name</label>\n <input is=\"iron-input\" type=\"text\" value=\"{{async::input}}\" id=\"asyncField\" />\n</paper-input-container>\n<paper-autocomplete loader id=\"fruitAsync\" on-query=\"_asyncSuggestions\"></paper-input-autocomplete>\n\n<script>\n document.querySelector('#fruitAsync').target = document.querySelector('#asyncField');\n document.querySelector('#fruitAsync').addEventListener('query', (e) => {\n   const query = e.detail.value;\n   asyncQuery(query, (suggestions) => {\n     document.querySelector('#fruitAsync').source = suggestions;\n   });\n });\n< /script>\n```\n\n## Displaying the suggestions\n\nSuggestions array can be either an array of strings or objects.\nFor strings, displayed in the list and inserted to the input field value is the same item.\n\nYou can set different list item display value and value inserted into the field when the array contains\nonject. Each object must contain `value` and `display` properties where `value` property\nwill be inserted into the text field and `display` will be used to display description inside the list.\n\n## Query event\n\nThe `query` event is fired when the user query change in the way so the element is\nnot able to display suggestions properly.\nThis means if the user add a letter to previously entered value the query event will not\nfire since it already have list of suggestion that should be used to filter suggestions from.\nAnd again when the user will delete a letter the element will still have list of\nsource suggestions to filter suggestions from.\nHowever, if the user change the query entirely it will fire `query` event\nand the app will expect to `source` to change. Setting source is not mandatory.\n\n## Preventing from changing the input value\n\nTo prevent the element to update the value of the target input, listent for\n`selected` event and cancel it by calling `event.preventDefault()` function.\n\n## Styling\n\nSuggestions are positioned absolutely! You must include relative positioned parent to contain the suggestion\ndisplay in the same area.\nUse CSS properties to position the display in the left bottom corner of the input field.\n\n`<paper-autocomplete>` provides the following custom properties and mixins\nfor styling:\n\n| Custom property | Description | Default |\n----------------|-------------|----------\n| `--paper-autocomplete` | Mixin applied to the display | `{}` |\n| `--paper-autocomplete-background-color` | Background color of suggestions | `{}` |",
+      "summary": "",
+      "path": "paper-autocomplete.html",
+      "properties": [
+        {
+          "name": "sizingTarget",
+          "type": "HTMLElement",
+          "description": "Sizing target element.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 210,
+              "column": 8
+            },
+            "end": {
+              "line": 212,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "fitInto",
+          "type": "Object",
+          "description": "The element to fit `this` into.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 79,
+              "column": 6
+            },
+            "end": {
+              "line": 82,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "noOverlap",
+          "type": "boolean",
+          "description": "Will position the element around the positionTarget without overlapping it.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 87,
+              "column": 6
+            },
+            "end": {
+              "line": 89,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "positionTarget",
+          "type": "!Element",
+          "description": "The element that should be used to position the element. If not set, it will\ndefault to the parent node.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 96,
+              "column": 6
+            },
+            "end": {
+              "line": 98,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "horizontalAlign",
+          "type": "string",
+          "description": "The orientation against which to align the element horizontally\nrelative to the `positionTarget`. Possible values are \"left\", \"right\", \"center\", \"auto\".",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 104,
+              "column": 6
+            },
+            "end": {
+              "line": 106,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "verticalAlign",
+          "type": "string",
+          "description": "The orientation against which to align the element vertically\nrelative to the `positionTarget`. Possible values are \"top\", \"bottom\", \"middle\", \"auto\".",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 112,
+              "column": 6
+            },
+            "end": {
+              "line": 114,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "dynamicAlign",
+          "type": "boolean",
+          "description": "If true, it will use `horizontalAlign` and `verticalAlign` values as preferred alignment\nand if there's not enough space, it will pick the values which minimize the cropping.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 120,
+              "column": 6
+            },
+            "end": {
+              "line": 122,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "horizontalOffset",
+          "type": "number",
+          "description": "A pixel value that will be added to the position calculated for the\ngiven `horizontalAlign`, in the direction of alignment. You can think\nof it as increasing or decreasing the distance to the side of the\nscreen given by `horizontalAlign`.\n\nIf `horizontalAlign` is \"left\" or \"center\", this offset will increase or\ndecrease the distance to the left side of the screen: a negative offset will\nmove the dropdown to the left; a positive one, to the right.\n\nConversely if `horizontalAlign` is \"right\", this offset will increase\nor decrease the distance to the right side of the screen: a negative\noffset will move the dropdown to the right; a positive one, to the left.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 138,
+              "column": 6
+            },
+            "end": {
+              "line": 142,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          },
+          "defaultValue": "0",
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "verticalOffset",
+          "type": "number",
+          "description": "A pixel value that will be added to the position calculated for the\ngiven `verticalAlign`, in the direction of alignment. You can think\nof it as increasing or decreasing the distance to the side of the\nscreen given by `verticalAlign`.\n\nIf `verticalAlign` is \"top\" or \"middle\", this offset will increase or\ndecrease the distance to the top side of the screen: a negative offset will\nmove the dropdown upwards; a positive one, downwards.\n\nConversely if `verticalAlign` is \"bottom\", this offset will increase\nor decrease the distance to the bottom side of the screen: a negative\noffset will move the dropdown downwards; a positive one, upwards.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 158,
+              "column": 6
+            },
+            "end": {
+              "line": 162,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          },
+          "defaultValue": "0",
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "autoFitOnAttach",
+          "type": "boolean",
+          "description": "Set to true to auto-fit on attach.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 167,
+              "column": 6
+            },
+            "end": {
+              "line": 170,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "_fitInfo",
+          "type": "?Object",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 173,
+              "column": 6
+            },
+            "end": {
+              "line": 175,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "_parentResizable",
+          "type": "Object",
+          "description": "The closest ancestor element that implements `IronResizableBehavior`.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-resizable-behavior/iron-resizable-behavior.html",
+            "start": {
+              "line": 36,
+              "column": 6
+            },
+            "end": {
+              "line": 39,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"_parentResizableChanged\""
+            }
+          },
+          "inheritedFrom": "Polymer.IronResizableBehavior"
+        },
+        {
+          "name": "_notifyingDescendant",
+          "type": "boolean",
+          "description": "True if this element is currently notifying its descendant elements of\nresize.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-resizable-behavior/iron-resizable-behavior.html",
+            "start": {
+              "line": 45,
+              "column": 6
+            },
+            "end": {
+              "line": 48,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "Polymer.IronResizableBehavior"
+        },
+        {
+          "name": "opened",
+          "type": "boolean",
+          "description": "True if the overlay is currently displayed.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 29,
+              "column": 6
+            },
+            "end": {
+              "line": 34,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "observer": "\"_openedChanged\""
+            }
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "canceled",
+          "type": "boolean",
+          "description": "True if the overlay was canceled when it was last closed.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 39,
+              "column": 6
+            },
+            "end": {
+              "line": 44,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"_canceledChanged\"",
+              "readOnly": true
+            }
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "withBackdrop",
+          "type": "boolean",
+          "description": "Set to true to display a backdrop behind the overlay. It traps the focus\nwithin the light DOM of the overlay.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 50,
+              "column": 6
+            },
+            "end": {
+              "line": 53,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "observer": "\"_withBackdropChanged\""
+            }
+          },
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "noAutoFocus",
+          "type": "boolean",
+          "description": "Set to true to disable auto-focusing the overlay or child nodes with\nthe `autofocus` attribute` when the overlay is opened.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 59,
+              "column": 6
+            },
+            "end": {
+              "line": 62,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "noCancelOnEscKey",
+          "type": "boolean",
+          "description": "Set to true to disable canceling the overlay with the ESC key.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 67,
+              "column": 6
+            },
+            "end": {
+              "line": 70,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "noCancelOnOutsideClick",
+          "type": "boolean",
+          "description": "Set to true to disable canceling the overlay by clicking outside it.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 75,
+              "column": 6
+            },
+            "end": {
+              "line": 78,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "closingReason",
+          "type": "Object",
+          "description": "Contains the reason(s) this overlay was last closed (see `iron-overlay-closed`).\n`IronOverlayBehavior` provides the `canceled` reason; implementers of the\nbehavior can provide other reasons in addition to `canceled`.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 85,
+              "column": 6
+            },
+            "end": {
+              "line": 89,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "restoreFocusOnClose",
+          "type": "boolean",
+          "description": "Set to true to enable restoring of focus when overlay is closed.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 94,
+              "column": 6
+            },
+            "end": {
+              "line": 97,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "allowClickThrough",
+          "type": "boolean",
+          "description": "Set to true to allow clicks to go through overlays.\nWhen the user clicks outside this overlay, the click may\nclose the overlay below.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 104,
+              "column": 6
+            },
+            "end": {
+              "line": 106,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "alwaysOnTop",
+          "type": "boolean",
+          "description": "Set to true to keep overlay always on top.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 111,
+              "column": 6
+            },
+            "end": {
+              "line": 113,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "scrollAction",
+          "type": "string",
+          "description": "Determines which action to perform when scroll outside an opened overlay happens.\nPossible values:\nlock - blocks scrolling from happening,\nrefit - computes the new position on the overlay\ncancel - causes the overlay to close",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 122,
+              "column": 6
+            },
+            "end": {
+              "line": 124,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_manager",
+          "type": "!Polymer.IronOverlayManagerClass",
+          "description": "Shortcut to access to the overlay manager.",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 131,
+              "column": 6
+            },
+            "end": {
+              "line": 134,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_focusedChild",
+          "type": "?Node",
+          "description": "The node being focused.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 140,
+              "column": 6
+            },
+            "end": {
+              "line": 142,
+              "column": 7
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "scrollTarget",
+          "type": "HTMLElement",
+          "description": "Scroll target element",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 206,
+              "column": 8
+            },
+            "end": {
+              "line": 208,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "_shouldHaveListener",
+          "type": "boolean",
+          "description": "True if the event listener should be installed.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 79,
+              "column": 4
+            },
+            "end": {
+              "line": 79,
+              "column": 29
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "source",
+          "type": "(Array.<Object> | Array.<String>)",
+          "description": "List of suggestions to display.\nIf the array items are strings they will be used for display a suggestions and\nto insert a value.\nIf the list is an object the each object must contain `value` and `display`\nproperties.\nThe `display` property will be used in the suggestions list and the\n`value` property will be used to insert the value to the referenced text field.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 174,
+              "column": 8
+            },
+            "end": {
+              "line": 176,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "value",
+          "type": "Object",
+          "description": "`value` Selected object from the suggestions",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 180,
+              "column": 8
+            },
+            "end": {
+              "line": 183,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true
+            }
+          }
+        },
+        {
+          "name": "suggestions",
+          "type": "Array",
+          "description": "List of suggestion that are displayed.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 187,
+              "column": 8
+            },
+            "end": {
+              "line": 191,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          },
+          "defaultValue": "[]"
+        },
+        {
+          "name": "target",
+          "type": "HTMLElement",
+          "description": "A target input field to observe.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 196,
+              "column": 8
+            },
+            "end": {
+              "line": 196,
+              "column": 27
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "selectedItem",
+          "type": "number",
+          "description": "Currently selected item on a suggestions list.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 201,
+              "column": 8
+            },
+            "end": {
+              "line": 204,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "0"
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "description": "True when user query changed and waiting for `source` property update",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 216,
+              "column": 8
+            },
+            "end": {
+              "line": 221,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "readOnly": true
+            }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "loader",
+          "type": "boolean",
+          "description": "Set this to true if you use async operation in response for query event.\nThis will display a loader when querying for more suggestions.\nDo not use it it you do not handle suggestions asynchronously.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 227,
+              "column": 8
+            },
+            "end": {
+              "line": 230,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "_showLoader",
+          "type": "boolean",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 232,
+              "column": 8
+            },
+            "end": {
+              "line": 235,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          }
+        },
+        {
+          "name": "isAttached",
+          "type": "boolean",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 237,
+              "column": 8
+            },
+            "end": {
+              "line": 237,
+              "column": 27
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "openOnFocus",
+          "type": "boolean",
+          "description": "If true it will opend suggestions on input field focus.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 240,
+              "column": 8
+            },
+            "end": {
+              "line": 243,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "_oldTarget",
+          "type": "HTMLElement",
+          "description": "listeners.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 246,
+              "column": 8
+            },
+            "end": {
+              "line": 246,
+              "column": 31
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        },
+        {
+          "name": "_keyTarget",
+          "type": "HTMLElement",
+          "description": "An event target for key down event.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 248,
+              "column": 8
+            },
+            "end": {
+              "line": 253,
+              "column": 9
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          }
+        }
+      ],
+      "methods": [
+        {
+          "name": "_fitWidth",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 178,
+              "column": 4
+            },
+            "end": {
+              "line": 186,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "_fitHeight",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 188,
+              "column": 4
+            },
+            "end": {
+              "line": 196,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "_fitLeft",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 198,
+              "column": 4
+            },
+            "end": {
+              "line": 206,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "_fitTop",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 208,
+              "column": 4
+            },
+            "end": {
+              "line": 216,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "_defaultPositionTarget",
+          "description": "The element that should be used to position the element,\nif no position target is configured.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 222,
+              "column": 4
+            },
+            "end": {
+              "line": 230,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "_localeHorizontalAlign",
+          "description": "The horizontal align value, accounting for the RTL/LTR text direction.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 235,
+              "column": 4
+            },
+            "end": {
+              "line": 246,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "__shouldPosition",
+          "description": "True if the element should be positioned instead of centered.",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 252,
+              "column": 4
+            },
+            "end": {
+              "line": 255,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "attached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 207,
+              "column": 4
+            },
+            "end": {
+              "line": 213,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "detached",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 215,
+              "column": 4
+            },
+            "end": {
+              "line": 237,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "fit",
+          "description": "Positions and fits the element into the `fitInto` element.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 289,
+              "column": 4
+            },
+            "end": {
+              "line": 293,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "_discoverInfo",
+          "description": "Memoize information needed to position and size the target element.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 299,
+              "column": 4
+            },
+            "end": {
+              "line": 336,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "resetFit",
+          "description": "Resets the target element's position and size constraints, and clear\nthe memoized data.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 342,
+              "column": 4
+            },
+            "end": {
+              "line": 352,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "refit",
+          "description": "Equivalent to calling `resetFit()` and `fit()`. Useful to call this after\nthe element or the `fitInto` element has been resized, or if any of the\npositioning properties (e.g. `horizontalAlign, verticalAlign`) is updated.\nIt preserves the scroll position of the sizingTarget.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 360,
+              "column": 4
+            },
+            "end": {
+              "line": 367,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "position",
+          "description": "Positions the element according to `horizontalAlign, verticalAlign`.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 372,
+              "column": 4
+            },
+            "end": {
+              "line": 422,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "constrain",
+          "description": "Constrains the size of the element to `fitInto` by setting `max-height`\nand/or `max-width`.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 428,
+              "column": 4
+            },
+            "end": {
+              "line": 455,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "_sizeDimension",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 461,
+              "column": 4
+            },
+            "end": {
+              "line": 463,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "rect"
+            },
+            {
+              "name": "positionedBy"
+            },
+            {
+              "name": "start"
+            },
+            {
+              "name": "end"
+            },
+            {
+              "name": "extent"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "__sizeDimension",
+          "description": "",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 468,
+              "column": 4
+            },
+            "end": {
+              "line": 478,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "rect"
+            },
+            {
+              "name": "positionedBy"
+            },
+            {
+              "name": "start"
+            },
+            {
+              "name": "end"
+            },
+            {
+              "name": "extent"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "center",
+          "description": "Centers horizontally and vertically if not already positioned. This also sets\n`position:fixed`.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 484,
+              "column": 4
+            },
+            "end": {
+              "line": 517,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "__getNormalizedRect",
+          "description": "",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 519,
+              "column": 4
+            },
+            "end": {
+              "line": 531,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "target"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "__getOffscreenArea",
+          "description": "",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 533,
+              "column": 4
+            },
+            "end": {
+              "line": 537,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "position"
+            },
+            {
+              "name": "size"
+            },
+            {
+              "name": "fitRect"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "__getPosition",
+          "description": "",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 540,
+              "column": 4
+            },
+            "end": {
+              "line": 659,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "hAlign"
+            },
+            {
+              "name": "vAlign"
+            },
+            {
+              "name": "size"
+            },
+            {
+              "name": "sizeNoMargins"
+            },
+            {
+              "name": "positionRect"
+            },
+            {
+              "name": "fitRect"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "created",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-resizable-behavior/iron-resizable-behavior.html",
+            "start": {
+              "line": 55,
+              "column": 4
+            },
+            "end": {
+              "line": 60,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronResizableBehavior"
+        },
+        {
+          "name": "notifyResize",
+          "description": "Can be called to manually notify a resizable and its descendant\nresizables of a resize change.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-resizable-behavior/iron-resizable-behavior.html",
+            "start": {
+              "line": 80,
+              "column": 4
+            },
+            "end": {
+              "line": 92,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronResizableBehavior"
+        },
+        {
+          "name": "assignParentResizable",
+          "description": "Used to assign the closest resizable ancestor to this resizable\nif the ancestor detects a request for notifications.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-resizable-behavior/iron-resizable-behavior.html",
+            "start": {
+              "line": 98,
+              "column": 4
+            },
+            "end": {
+              "line": 100,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "parentResizable"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronResizableBehavior"
+        },
+        {
+          "name": "stopResizeNotificationsFor",
+          "description": "Used to remove a resizable descendant from the list of descendants\nthat should be notified of a resize change.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-resizable-behavior/iron-resizable-behavior.html",
+            "start": {
+              "line": 106,
+              "column": 4
+            },
+            "end": {
+              "line": 113,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "target"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronResizableBehavior"
+        },
+        {
+          "name": "resizerShouldNotify",
+          "description": "This method can be overridden to filter nested elements that should or\nshould not be notified by the current element. Return true if an element\nshould be notified, or false if it should not be notified.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-resizable-behavior/iron-resizable-behavior.html",
+            "start": {
+              "line": 124,
+              "column": 4
+            },
+            "end": {
+              "line": 124,
+              "column": 59
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "element",
+              "type": "HTMLElement",
+              "description": "A candidate descendant element that\nimplements `IronResizableBehavior`."
+            }
+          ],
+          "return": {
+            "type": "boolean",
+            "desc": "True if the `element` should be notified of resize."
+          },
+          "inheritedFrom": "Polymer.IronResizableBehavior"
+        },
+        {
+          "name": "_onDescendantIronResize",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-resizable-behavior/iron-resizable-behavior.html",
+            "start": {
+              "line": 126,
+              "column": 4
+            },
+            "end": {
+              "line": 138,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronResizableBehavior"
+        },
+        {
+          "name": "_fireResize",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-resizable-behavior/iron-resizable-behavior.html",
+            "start": {
+              "line": 140,
+              "column": 4
+            },
+            "end": {
+              "line": 145,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronResizableBehavior"
+        },
+        {
+          "name": "_onIronRequestResizeNotifications",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-resizable-behavior/iron-resizable-behavior.html",
+            "start": {
+              "line": 147,
+              "column": 4
+            },
+            "end": {
+              "line": 162,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronResizableBehavior"
+        },
+        {
+          "name": "_parentResizableChanged",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-resizable-behavior/iron-resizable-behavior.html",
+            "start": {
+              "line": 164,
+              "column": 4
+            },
+            "end": {
+              "line": 168,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "parentResizable"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronResizableBehavior"
+        },
+        {
+          "name": "_notifyDescendant",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-resizable-behavior/iron-resizable-behavior.html",
+            "start": {
+              "line": 170,
+              "column": 4
+            },
+            "end": {
+              "line": 181,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "descendant"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronResizableBehavior"
+        },
+        {
+          "name": "_requestResizeNotifications",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-resizable-behavior/iron-resizable-behavior.html",
+            "start": {
+              "line": 183,
+              "column": 4
+            },
+            "end": {
+              "line": 211,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronResizableBehavior"
+        },
+        {
+          "name": "backdropElement",
+          "description": "The backdrop element.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 158,
+              "column": 4
+            },
+            "end": {
+              "line": 160,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "!Element"
+          },
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_focusNode",
+          "description": "Returns the node to give focus to.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 166,
+              "column": 4
+            },
+            "end": {
+              "line": 168,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "!Node"
+          },
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_focusableNodes",
+          "description": "Array of nodes that can receive focus (overlay included), ordered by `tabindex`.\nThis is used to retrieve which is the first and last focusable nodes in order\nto wrap the focus for overlays `with-backdrop`.\n\nIf you know what is your content (specifically the first and last focusable children),\nyou can override this method to return only `[firstFocusable, lastFocusable];`",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 180,
+              "column": 4
+            },
+            "end": {
+              "line": 182,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "!Array.<!Node>"
+          },
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "ready",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 284,
+              "column": 4
+            },
+            "end": {
+              "line": 294,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "toggle",
+          "description": "Toggle the opened state of the overlay.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 242,
+              "column": 4
+            },
+            "end": {
+              "line": 245,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "open",
+          "description": "Open the overlay.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 250,
+              "column": 4
+            },
+            "end": {
+              "line": 253,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "close",
+          "description": "Close the overlay.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 258,
+              "column": 4
+            },
+            "end": {
+              "line": 261,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "cancel",
+          "description": "Cancels the overlay.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 267,
+              "column": 4
+            },
+            "end": {
+              "line": 275,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event",
+              "type": "Event=",
+              "description": "The original event"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "invalidateTabbables",
+          "description": "Invalidates the cached tabbable nodes. To be called when any of the focusable\ncontent changes (e.g. a button is disabled).",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 281,
+              "column": 4
+            },
+            "end": {
+              "line": 283,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_ensureSetup",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 285,
+              "column": 4
+            },
+            "end": {
+              "line": 292,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_openedChanged",
+          "description": "Called when `opened` changes.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 299,
+              "column": 4
+            },
+            "end": {
+              "line": 316,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "opened",
+              "type": "boolean="
+            }
+          ],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_canceledChanged",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 318,
+              "column": 4
+            },
+            "end": {
+              "line": 321,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_withBackdropChanged",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 323,
+              "column": 4
+            },
+            "end": {
+              "line": 335,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_prepareRenderOpened",
+          "description": "tasks which must occur before opening; e.g. making the element visible.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 341,
+              "column": 4
+            },
+            "end": {
+              "line": 357,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_renderOpened",
+          "description": "Tasks which cause the overlay to actually open; typically play an animation.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 363,
+              "column": 4
+            },
+            "end": {
+              "line": 365,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_renderClosed",
+          "description": "Tasks which cause the overlay to actually close; typically play an animation.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 371,
+              "column": 4
+            },
+            "end": {
+              "line": 373,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_finishRenderOpened",
+          "description": "Tasks to be performed at the end of open action. Will fire `iron-overlay-opened`.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 379,
+              "column": 4
+            },
+            "end": {
+              "line": 384,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_finishRenderClosed",
+          "description": "Tasks to be performed at the end of close action. Will fire `iron-overlay-closed`.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 390,
+              "column": 4
+            },
+            "end": {
+              "line": 398,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_preparePositioning",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 400,
+              "column": 4
+            },
+            "end": {
+              "line": 404,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_finishPositioning",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 406,
+              "column": 4
+            },
+            "end": {
+              "line": 419,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_applyFocus",
+          "description": "Applies focus according to the opened state.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 425,
+              "column": 4
+            },
+            "end": {
+              "line": 456,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_onCaptureClick",
+          "description": "Cancels (closes) the overlay. Call when click happens outside the overlay.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 463,
+              "column": 4
+            },
+            "end": {
+              "line": 467,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event",
+              "type": "!Event"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_onCaptureFocus",
+          "description": "Keeps track of the focused child. If withBackdrop, traps focus within overlay.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 474,
+              "column": 4
+            },
+            "end": {
+              "line": 485,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event",
+              "type": "!Event"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_onCaptureEsc",
+          "description": "Handles the ESC key event and cancels (closes) the overlay.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 492,
+              "column": 4
+            },
+            "end": {
+              "line": 496,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event",
+              "type": "!Event"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_onCaptureTab",
+          "description": "Handles TAB key events to track focus changes.\nWill wrap focus for overlays withBackdrop.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 504,
+              "column": 4
+            },
+            "end": {
+              "line": 546,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event",
+              "type": "!Event"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_onIronResize",
+          "description": "Refits if the overlay is opened and not animating.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 552,
+              "column": 4
+            },
+            "end": {
+              "line": 556,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_onNodesChange",
+          "description": "Will call notifyResize if overlay is opened.\nCan be overridden in order to avoid multiple observers on the same node.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 563,
+              "column": 4
+            },
+            "end": {
+              "line": 569,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "__ensureFirstLastFocusables",
+          "description": "Will set first and last focusable nodes if any of them is not set.",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 575,
+              "column": 4
+            },
+            "end": {
+              "line": 581,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "__openedChanged",
+          "description": "Tasks executed when opened changes: prepare for the opening, move the\nfocus, update the manager, render opened/closed.",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 588,
+              "column": 4
+            },
+            "end": {
+              "line": 604,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "__deraf",
+          "description": "Debounces the execution of a callback to the next animation frame.",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 612,
+              "column": 4
+            },
+            "end": {
+              "line": 621,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "jobname",
+              "type": "!string"
+            },
+            {
+              "name": "callback",
+              "type": "!Function",
+              "description": "Always bound to `this`"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "__updateScrollObservers",
+          "description": "",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 629,
+              "column": 4
+            },
+            "end": {
+              "line": 640,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "isAttached",
+              "type": "boolean"
+            },
+            {
+              "name": "opened",
+              "type": "boolean"
+            },
+            {
+              "name": "scrollAction",
+              "type": "string="
+            }
+          ],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "__addScrollListeners",
+          "description": "",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 645,
+              "column": 4
+            },
+            "end": {
+              "line": 667,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "__removeScrollListeners",
+          "description": "",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 672,
+              "column": 4
+            },
+            "end": {
+              "line": 684,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "__isValidScrollAction",
+          "description": "",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 691,
+              "column": 4
+            },
+            "end": {
+              "line": 695,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "scrollAction",
+              "type": "string="
+            }
+          ],
+          "return": {
+            "type": "boolean"
+          },
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "__onCaptureScroll",
+          "description": "",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 700,
+              "column": 4
+            },
+            "end": {
+              "line": 722,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "event"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "__saveScrollPosition",
+          "description": "Memoizes the scroll position of the outside scrolling element.",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 728,
+              "column": 4
+            },
+            "end": {
+              "line": 737,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "__restoreScrollPosition",
+          "description": "Resets the scroll position of the outside scrolling element.",
+          "privacy": "private",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 743,
+              "column": 4
+            },
+            "end": {
+              "line": 752,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "_scrollTargetChanged",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 81,
+              "column": 4
+            },
+            "end": {
+              "line": 109,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "scrollTarget"
+            },
+            {
+              "name": "isAttached"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_scrollHandler",
+          "description": "Runs on every scroll event. Consumer of this behavior may override this method.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 116,
+              "column": 4
+            },
+            "end": {
+              "line": 116,
+              "column": 47
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_defaultScrollTarget",
+          "description": "The default scroll target. Consumers of this behavior may want to customize\nthe default scroll target.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 124,
+              "column": 4
+            },
+            "end": {
+              "line": 126,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_doc",
+          "description": "Shortcut for the document element",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 133,
+              "column": 4
+            },
+            "end": {
+              "line": 135,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_scrollTop",
+          "description": "Sets the number of pixels that the content of an element is scrolled upward.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 166,
+              "column": 4
+            },
+            "end": {
+              "line": 172,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "top"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_scrollLeft",
+          "description": "Sets the number of pixels that the content of an element is scrolled to the left.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 179,
+              "column": 4
+            },
+            "end": {
+              "line": 185,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "left"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "scroll",
+          "description": "Scrolls the content to a particular place.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 194,
+              "column": 4
+            },
+            "end": {
+              "line": 201,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "left",
+              "type": "number",
+              "description": "The left position"
+            },
+            {
+              "name": "top",
+              "type": "number",
+              "description": "The top position"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_scrollTargetWidth",
+          "description": "Gets the width of the scroll target.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 208,
+              "column": 4
+            },
+            "end": {
+              "line": 213,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_scrollTargetHeight",
+          "description": "Gets the height of the scroll target.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 220,
+              "column": 4
+            },
+            "end": {
+              "line": 225,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_isValidScrollTarget",
+          "description": "Returns true if the scroll target is a valid HTMLElement.",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 232,
+              "column": 4
+            },
+            "end": {
+              "line": 234,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "boolean"
+          },
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "_toggleScrollListener",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 236,
+              "column": 4
+            },
+            "end": {
+              "line": 249,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "yes"
+            },
+            {
+              "name": "scrollTarget"
+            }
+          ],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "toggleScrollListener",
+          "description": "Enables or disables the scroll event listener.",
+          "privacy": "public",
+          "sourceRange": {
+            "file": "bower_components/iron-scroll-target-behavior/iron-scroll-target-behavior.html",
+            "start": {
+              "line": 256,
+              "column": 4
+            },
+            "end": {
+              "line": 259,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "yes",
+              "type": "boolean",
+              "description": "True to add the event, False to remove it."
+            }
+          ],
+          "inheritedFrom": "Polymer.IronScrollTargetBehavior"
+        },
+        {
+          "name": "connectedCallback",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 274,
+              "column": 4
+            },
+            "end": {
+              "line": 277,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "disconnectedCallback",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 279,
+              "column": 4
+            },
+            "end": {
+              "line": 282,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_targetChanged",
+          "description": "Handler for target property change.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 302,
+              "column": 4
+            },
+            "end": {
+              "line": 324,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "target",
+              "type": "HTMLElement",
+              "description": "Target input element"
+            },
+            {
+              "name": "isAttached",
+              "type": "Boolean",
+              "description": "True if this element is attached to the DOM."
+            }
+          ]
+        },
+        {
+          "name": "_valueChanged",
+          "description": "Handler for target input change.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 329,
+              "column": 4
+            },
+            "end": {
+              "line": 364,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_filterSuggestions",
+          "description": "Filter `source` array for current value.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 369,
+              "column": 4
+            },
+            "end": {
+              "line": 417,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_suggestionDisplay",
+          "description": "Compute suggestion display value",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 419,
+              "column": 4
+            },
+            "end": {
+              "line": 421,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "item"
+            }
+          ]
+        },
+        {
+          "name": "selectPrevious",
+          "description": "Highlight previous suggestion",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 425,
+              "column": 4
+            },
+            "end": {
+              "line": 434,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "selectNext",
+          "description": "Highlight next suggestion",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 438,
+              "column": 4
+            },
+            "end": {
+              "line": 447,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "acceptSelection",
+          "description": "Accepts currently selected suggestion and enters it into a text field.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 451,
+              "column": 4
+            },
+            "end": {
+              "line": 461,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_inform",
+          "description": "Dispatches `selected` event with new value.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 467,
+              "column": 4
+            },
+            "end": {
+              "line": 481,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "value",
+              "type": "String",
+              "description": "Selected value."
+            }
+          ]
+        },
+        {
+          "name": "ensureItemVisible",
+          "description": "Ensure that the selected item is visible in the scroller.\nWhen there is more elements to show than space available (height)\nthen some elements will be hidden. When the user use arrows to navigate\nthe selection may get out from the screen. This function ensures that\ncurrently selected element is visible.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 492,
+              "column": 4
+            },
+            "end": {
+              "line": 520,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "bottom",
+              "type": "Boolean",
+              "description": "If trully it will ensure that the element is\nvisible at the bottom of the container. On the top otherwise."
+            }
+          ]
+        },
+        {
+          "name": "_computeShowLoader",
+          "description": "Computes value for `_showLoader` property.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 528,
+              "column": 4
+            },
+            "end": {
+              "line": 530,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "loader",
+              "type": "Boolean"
+            },
+            {
+              "name": "loading",
+              "type": "Boolean"
+            }
+          ],
+          "return": {
+            "type": "Boolean",
+            "desc": "True if the loader should be rendered."
+          }
+        },
+        {
+          "name": "_targetFocus",
+          "description": "Handler for target element focus event.\nOpens the autocomplete if `openOnFocus` is set.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 535,
+              "column": 4
+            },
+            "end": {
+              "line": 548,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_targetClick",
+          "description": "Prohibits click event propagation when the overlay is opened so\nthe overlay manager won't close it immidietly after focusing (with click\nevent included) in the target field.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 554,
+              "column": 4
+            },
+            "end": {
+              "line": 560,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "_ensureSelection",
+          "description": "Selects a first available item after filtering results and missing\nselection.",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 565,
+              "column": 4
+            },
+            "end": {
+              "line": 570,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        }
+      ],
+      "staticMethods": [],
+      "demos": [
+        {
+          "url": "demo/index.html",
+          "description": ""
+        }
+      ],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 157,
+          "column": 2
+        },
+        "end": {
+          "line": 571,
+          "column": 3
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "name": "UI Elements.PaperAutocomplete",
+      "attributes": [
+        {
+          "name": "sizing-target",
+          "description": "Sizing target element.",
+          "sourceRange": {
+            "start": {
+              "line": 210,
+              "column": 8
+            },
+            "end": {
+              "line": 212,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "HTMLElement"
+        },
+        {
+          "name": "fit-into",
+          "description": "The element to fit `this` into.",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 79,
+              "column": 6
+            },
+            "end": {
+              "line": 82,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "Object",
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "no-overlap",
+          "description": "Will position the element around the positionTarget without overlapping it.",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 87,
+              "column": 6
+            },
+            "end": {
+              "line": 89,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean",
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "position-target",
+          "description": "The element that should be used to position the element. If not set, it will\ndefault to the parent node.",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 96,
+              "column": 6
+            },
+            "end": {
+              "line": 98,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "!Element",
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "horizontal-align",
+          "description": "The orientation against which to align the element horizontally\nrelative to the `positionTarget`. Possible values are \"left\", \"right\", \"center\", \"auto\".",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 104,
+              "column": 6
+            },
+            "end": {
+              "line": 106,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string",
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "vertical-align",
+          "description": "The orientation against which to align the element vertically\nrelative to the `positionTarget`. Possible values are \"top\", \"bottom\", \"middle\", \"auto\".",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 112,
+              "column": 6
+            },
+            "end": {
+              "line": 114,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string",
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "dynamic-align",
+          "description": "If true, it will use `horizontalAlign` and `verticalAlign` values as preferred alignment\nand if there's not enough space, it will pick the values which minimize the cropping.",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 120,
+              "column": 6
+            },
+            "end": {
+              "line": 122,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean",
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "horizontal-offset",
+          "description": "A pixel value that will be added to the position calculated for the\ngiven `horizontalAlign`, in the direction of alignment. You can think\nof it as increasing or decreasing the distance to the side of the\nscreen given by `horizontalAlign`.\n\nIf `horizontalAlign` is \"left\" or \"center\", this offset will increase or\ndecrease the distance to the left side of the screen: a negative offset will\nmove the dropdown to the left; a positive one, to the right.\n\nConversely if `horizontalAlign` is \"right\", this offset will increase\nor decrease the distance to the right side of the screen: a negative\noffset will move the dropdown to the right; a positive one, to the left.",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 138,
+              "column": 6
+            },
+            "end": {
+              "line": 142,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "number",
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "vertical-offset",
+          "description": "A pixel value that will be added to the position calculated for the\ngiven `verticalAlign`, in the direction of alignment. You can think\nof it as increasing or decreasing the distance to the side of the\nscreen given by `verticalAlign`.\n\nIf `verticalAlign` is \"top\" or \"middle\", this offset will increase or\ndecrease the distance to the top side of the screen: a negative offset will\nmove the dropdown upwards; a positive one, downwards.\n\nConversely if `verticalAlign` is \"bottom\", this offset will increase\nor decrease the distance to the bottom side of the screen: a negative\noffset will move the dropdown downwards; a positive one, upwards.",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 158,
+              "column": 6
+            },
+            "end": {
+              "line": 162,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "number",
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "auto-fit-on-attach",
+          "description": "Set to true to auto-fit on attach.",
+          "sourceRange": {
+            "file": "bower_components/iron-fit-behavior/iron-fit-behavior.html",
+            "start": {
+              "line": 167,
+              "column": 6
+            },
+            "end": {
+              "line": 170,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean",
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "name": "opened",
+          "description": "True if the overlay is currently displayed.",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 29,
+              "column": 6
+            },
+            "end": {
+              "line": 34,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "canceled",
+          "description": "True if the overlay was canceled when it was last closed.",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 39,
+              "column": 6
+            },
+            "end": {
+              "line": 44,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "with-backdrop",
+          "description": "Set to true to display a backdrop behind the overlay. It traps the focus\nwithin the light DOM of the overlay.",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 50,
+              "column": 6
+            },
+            "end": {
+              "line": 53,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "no-auto-focus",
+          "description": "Set to true to disable auto-focusing the overlay or child nodes with\nthe `autofocus` attribute` when the overlay is opened.",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 59,
+              "column": 6
+            },
+            "end": {
+              "line": 62,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "no-cancel-on-esc-key",
+          "description": "Set to true to disable canceling the overlay with the ESC key.",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 67,
+              "column": 6
+            },
+            "end": {
+              "line": 70,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "no-cancel-on-outside-click",
+          "description": "Set to true to disable canceling the overlay by clicking outside it.",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 75,
+              "column": 6
+            },
+            "end": {
+              "line": 78,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "closing-reason",
+          "description": "Contains the reason(s) this overlay was last closed (see `iron-overlay-closed`).\n`IronOverlayBehavior` provides the `canceled` reason; implementers of the\nbehavior can provide other reasons in addition to `canceled`.",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 85,
+              "column": 6
+            },
+            "end": {
+              "line": 89,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "Object",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "restore-focus-on-close",
+          "description": "Set to true to enable restoring of focus when overlay is closed.",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 94,
+              "column": 6
+            },
+            "end": {
+              "line": 97,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "allow-click-through",
+          "description": "Set to true to allow clicks to go through overlays.\nWhen the user clicks outside this overlay, the click may\nclose the overlay below.",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 104,
+              "column": 6
+            },
+            "end": {
+              "line": 106,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "always-on-top",
+          "description": "Set to true to keep overlay always on top.",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 111,
+              "column": 6
+            },
+            "end": {
+              "line": 113,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "boolean",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "scroll-action",
+          "description": "Determines which action to perform when scroll outside an opened overlay happens.\nPossible values:\nlock - blocks scrolling from happening,\nrefit - computes the new position on the overlay\ncancel - causes the overlay to close",
+          "sourceRange": {
+            "file": "bower_components/iron-overlay-behavior/iron-overlay-behavior.html",
+            "start": {
+              "line": 122,
+              "column": 6
+            },
+            "end": {
+              "line": 124,
+              "column": 7
+            }
+          },
+          "metadata": {},
+          "type": "string",
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "name": "scroll-target",
+          "description": "Scroll target element",
+          "sourceRange": {
+            "start": {
+              "line": 206,
+              "column": 8
+            },
+            "end": {
+              "line": 208,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "HTMLElement"
+        },
+        {
+          "name": "source",
+          "description": "List of suggestions to display.\nIf the array items are strings they will be used for display a suggestions and\nto insert a value.\nIf the list is an object the each object must contain `value` and `display`\nproperties.\nThe `display` property will be used in the suggestions list and the\n`value` property will be used to insert the value to the referenced text field.",
+          "sourceRange": {
+            "start": {
+              "line": 174,
+              "column": 8
+            },
+            "end": {
+              "line": 176,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "(Array.<Object> | Array.<String>)"
+        },
+        {
+          "name": "value",
+          "description": "`value` Selected object from the suggestions",
+          "sourceRange": {
+            "start": {
+              "line": 180,
+              "column": 8
+            },
+            "end": {
+              "line": 183,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "Object"
+        },
+        {
+          "name": "suggestions",
+          "description": "List of suggestion that are displayed.",
+          "sourceRange": {
+            "start": {
+              "line": 187,
+              "column": 8
+            },
+            "end": {
+              "line": 191,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "Array"
+        },
+        {
+          "name": "target",
+          "description": "A target input field to observe.",
+          "sourceRange": {
+            "start": {
+              "line": 196,
+              "column": 8
+            },
+            "end": {
+              "line": 196,
+              "column": 27
+            }
+          },
+          "metadata": {},
+          "type": "HTMLElement"
+        },
+        {
+          "name": "selected-item",
+          "description": "Currently selected item on a suggestions list.",
+          "sourceRange": {
+            "start": {
+              "line": 201,
+              "column": 8
+            },
+            "end": {
+              "line": 204,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "number"
+        },
+        {
+          "name": "loading",
+          "description": "True when user query changed and waiting for `source` property update",
+          "sourceRange": {
+            "start": {
+              "line": 216,
+              "column": 8
+            },
+            "end": {
+              "line": 221,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "loader",
+          "description": "Set this to true if you use async operation in response for query event.\nThis will display a loader when querying for more suggestions.\nDo not use it it you do not handle suggestions asynchronously.",
+          "sourceRange": {
+            "start": {
+              "line": 227,
+              "column": 8
+            },
+            "end": {
+              "line": 230,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "is-attached",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 237,
+              "column": 8
+            },
+            "end": {
+              "line": 237,
+              "column": 27
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        },
+        {
+          "name": "open-on-focus",
+          "description": "If true it will opend suggestions on input field focus.",
+          "sourceRange": {
+            "start": {
+              "line": 240,
+              "column": 8
+            },
+            "end": {
+              "line": 243,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "type": "boolean"
+        }
+      ],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "horizontal-offset-changed",
+          "description": "Fired when the `horizontalOffset` property changes.",
+          "metadata": {},
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "type": "CustomEvent",
+          "name": "vertical-offset-changed",
+          "description": "Fired when the `verticalOffset` property changes.",
+          "metadata": {},
+          "inheritedFrom": "Polymer.IronFitBehavior"
+        },
+        {
+          "type": "CustomEvent",
+          "name": "opened-changed",
+          "description": "Fired when the `opened` property changes.",
+          "metadata": {},
+          "inheritedFrom": "Polymer.IronOverlayBehaviorImpl"
+        },
+        {
+          "type": "CustomEvent",
+          "name": "iron-overlay-canceled",
+          "description": "iron-overlay-canceled",
+          "metadata": {},
+          "inheritedFrom": "Polymer.IronOverlayBehavior"
+        },
+        {
+          "type": "CustomEvent",
+          "name": "iron-overlay-closed",
+          "description": "iron-overlay-closed",
+          "metadata": {},
+          "inheritedFrom": "Polymer.IronOverlayBehavior"
+        },
+        {
+          "type": "CustomEvent",
+          "name": "iron-overlay-opened",
+          "description": "iron-overlay-opened",
+          "metadata": {},
+          "inheritedFrom": "Polymer.IronOverlayBehavior"
+        },
+        {
+          "type": "CustomEvent",
+          "name": "query",
+          "description": "query",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "selected",
+          "description": "selected",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "value-changed",
+          "description": "Fired when the `value` property changes.",
+          "metadata": {}
+        },
+        {
+          "type": "CustomEvent",
+          "name": "loading-changed",
+          "description": "Fired when the `loading` property changes.",
+          "metadata": {}
+        }
+      ],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "paper-autocomplete",
+      "mixins": [
+        "Polymer.IronOverlayBehavior",
+        "Polymer.IronScrollTargetBehavior"
+      ]
+    }
+  ]
+}

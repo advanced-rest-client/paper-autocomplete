@@ -1,6 +1,6 @@
 {
-  "name": "paper-autocomplete",
-  "version": "1.0.20",
+  "name": "@api-components/paper-autocomplete",
+  "version": "2.0.0",
   "license": "Apache-2.0",
   "description": "Paper autocomplete element to be used with paper-, iron- and regular inputs.",
   "scripts": {
@@ -9,12 +9,13 @@
     "test-sauce": "node_modules/.bin/polymer test --plugin sauce --job-name \"paper-autocomplete:local-test\"",
     "test": "node_modules/.bin/polymer test --plugin local",
     "deps": "npm install --quiet && bower install --quiet",
-    "update-deps": "npm update --quiet && bower update --quiet"
+    "update-types": "bower install && gen-typescript-declarations --deleteExisting --outDir ."
   },
   "devDependencies": {
     "bower": "^1.8.0",
     "polymer-cli": "^1.2.0",
-    "shady-css-parser": "^0.1.0"
+    "shady-css-parser": "^0.1.0",
+    "@polymer/gen-typescript-declarations": "^1.1.1"
   },
   "private": false
 }

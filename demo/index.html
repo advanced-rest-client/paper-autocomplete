@@ -16,76 +16,85 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <title>Paper Autocomplete Demo</title>
   <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
   <link rel="import" href="../../paper-styles/paper-styles.html">
-  <link rel="import" href="../../paper-styles/demo-pages.html">
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
   <link rel="import" href="../../paper-button/paper-button.html">
   <link rel="import" href="../../paper-input/paper-input-container.html">
   <link rel="import" href="../../paper-input/paper-input.html">
   <link rel="import" href="../paper-autocomplete.html">
-  <style>
-  .form .form-row paper-autocomplete {
-    top: 32px;
-  }
-  </style>
+  <custom-style>
+    <style is="custom-style" include="demo-pages-shared-styles">
+    .form .form-row paper-autocomplete {
+      top: 32px;
+    }
+
+    .relative {
+      position: relative;
+    }
+    </style>
+  </custom-style>
 </head>
 
 <body>
-  <template is="dom-bind">
-    <div class="vertical-section vertical-section-container centered relative">
-      <p>Suggestions with predefined list</p>
-      <div class="relative">
-        <paper-input label="Enter fruit name" id="fruits"></paper-input>
-        <paper-autocomplete open-on-focus on-query="_queryCalled" on-selected="_selectedCalled" source="[[suggestions]]" id="fruitsSuggestions"></paper-autocomplete>
+  <dom-bind id="demo">
+    <template is="dom-bind">
+      <div class="vertical-section vertical-section-container c`entered relative">
+        <p>Suggestions with predefined list</p>
+        <div class="relative">
+          <paper-input label="Enter fruit name" id="fruits"></paper-input>
+          <paper-autocomplete open-on-focus on-query="_queryCalled" on-selected="_selectedCalled" source="[[suggestions]]" id="fruitsSuggestions"></paper-autocomplete>
+        </div>
+        <p>
+          <span>`query` event fired:</span>
+          <span>[[queryCounter]]</span>,
+          <span>`selected` event fired:</span>
+          <span>[[selectedCounter]]</span>
+        </p>
       </div>
-      <p>
-        <span>`query` event fired:</span>
-        <span>[[queryCounter]]</span>,
-        <span>`selected` event fired:</span>
-        <span>[[selectedCounter]]</span>
-      </p>
-    </div>
-    <div class="vertical-section vertical-section-container centered relative">
-      <p>Attach autocomplete to existing input field</p>
-      <div class="relative">
-        <paper-input-container>
-          <label>Enter friut name</label>
-          <input is="iron-input" type="text" value="{{externalInput::input}}" id="externalField" />
-        </paper-input-container>
-        <paper-autocomplete loader id="fruitExternal" on-query="_asyncSuggestions"></paper-autocomplete>
+      <div class="vertical-section vertical-section-container centered relative">
+        <p>Attach autocomplete to existing input field</p>
+        <div class="relative">
+          <paper-input-container>
+            <label>Enter friut name</label>
+            <input slot="input" type="text" value="{{externalInput::input}}" id="externalField" />
+          </paper-input-container>
+          <paper-autocomplete loader id="fruitExternal" on-query="_asyncSuggestions"></paper-autocomplete>
+        </div>
       </div>
-    </div>
-    <div class="vertical-section vertical-section-container centered relative">
-      <p>Autocomplete in <b>dom-repeat</b></p>
-      <div class="form">
-        <template is="dom-repeat" id="list" items="{{list}}">
-          <div class="form-row relative">
-            <paper-input-container class="item-name" no-label-float inline>
-              <input is="iron-input" on-focus="inputFocus" type="text" value="{{item.name::input}}" placeholder="Fruit name"/>
-            </paper-input-container>
-            <paper-button title="Remove fruit" on-tap="removeItem">remove</paper-button>
-            <paper-autocomplete open-on-focus source="[[suggestions]]"></paper-autocomplete>
-          </div>
-        </template>
+      <div class="vertical-section vertical-section-container centered relative">
+        <p>Autocomplete in <b>dom-repeat</b></p>
+        <div class="form">
+          <template is="dom-repeat" id="list" items="{{list}}">
+            <div class="form-row relative">
+              <paper-input-container class="item-name" no-label-float inline>
+                <iron-input slot="input">
+                  <input on-focus="inputFocus" type="text" value="{{item.name::input}}" placeholder="Fruit name">
+                </iron-input>
+              </paper-input-container>
+              <paper-button title="Remove fruit" on-tap="removeItem">remove</paper-button>
+              <paper-autocomplete open-on-focus source="[[suggestions]]"></paper-autocomplete>
+            </div>
+          </template>
+        </div>
+        <paper-button raised on-tap="appendListItem">Add</paper-button>
       </div>
-      <paper-button raised on-tap="appendListItem">Add</paper-button>
-    </div>
-
-    <div class="vertical-section vertical-section-container centered relative">
-      <p>Autocomplete can be positioned</p>
-      <div class="relative">
-        <paper-input label="Enter fruit name" id="fruitsPositioned"></paper-input>
-        <paper-autocomplete open-on-focus target="[[positionTarget]]" position-target="[[positionTarget]]" dynamic-align vertical-align="top" horizontal-align="left" vertical-offset="56" source="[[suggestions]]"></paper-autocomplete>
+      <div class="vertical-section vertical-section-container centered relative">
+        <p>Autocomplete can be positioned</p>
+        <div class="relative">
+          <paper-input label="Enter fruit name" id="fruitsPositioned"></paper-input>
+          <paper-autocomplete open-on-focus target="[[positionTarget]]" position-target="[[positionTarget]]" dynamic-align vertical-align="top" horizontal-align="left" vertical-offset="56" source="[[suggestions]]"></paper-autocomplete>
+        </div>
       </div>
-    </div>
-
-  </template>
+    </template>
+  </dom-bind>
   <script src="../../chance/chance.js"></script>
   <script>
-    /* global chance */
-    var demo = document.querySelector('template');
+  /* global chance */
+  (function(demo) {
     demo.selectedCounter = 0;
     demo.queryCounter = 0;
-    demo.addEventListener('dom-change', function() {
-      var suggestions = ['Apple', 'Apricot', 'Avocado',
+    const suggestions = ['Apple', 'Apricot', 'Avocado',
       'Banana', 'Bilberry', 'Blackberry', 'Blackcurrant', 'Blueberry',
       'Boysenberry', 'Cantaloupe', 'Currant', 'Cherry', 'Cherimoya',
       'Cloudberry', 'Coconut', 'Cranberry', 'Damson', 'Date', 'Dragonfruit',
@@ -93,19 +102,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       'Grape', 'Grapefruit', 'Guava', 'Huckleberry', 'Jabuticaba', 'Jackfruit',
       'Jambul', 'Jujube', 'Juniper berry', 'Kiwi fruit', 'Kumquat', 'Lemon',
       'Lime', 'Loquat', 'Lychee', 'Mango', 'Marion berry', 'Melon', 'Miracle fruit',
-      'Mulberry', 'Nectarine', 'Olive', 'Orange'];
-      demo.$.fruitsSuggestions.source = suggestions;
-      demo.suggestions = suggestions;
-      demo.list = [
-        {name: 'Apple'},
-        {name: 'Damson'},
-        {name: 'Feijoa'},
-        {name: 'Mango'},
-        {name: 'Olive'}
-      ];
-      demo.$.fruitsSuggestions.target = demo.$.fruits;
-      demo.$.fruitExternal.target = demo.$.externalField;
-    });
+      'Mulberry', 'Nectarine', 'Olive', 'Orange'
+    ];
+    demo.suggestions = suggestions;
+    demo.list = [{
+        name: 'Apple'
+      },
+      {
+        name: 'Damson'
+      },
+      {
+        name: 'Feijoa'
+      },
+      {
+        name: 'Mango'
+      },
+      {
+        name: 'Olive'
+      }
+    ];
+    demo.$.fruitsSuggestions.target = demo.$.fruits;
+    demo.$.fruitExternal.target = demo.$.externalField;
     demo._selectedCalled = function() {
       demo.selectedCounter++;
     };
@@ -114,7 +131,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     };
     demo._asyncSuggestions = function(e) {
       var value = e.detail.value;
-      demo.async(function() {
+      setTimeout(() => {
         var suggestions = [];
         for (var i = 0; i < 25; i++) {
           suggestions.push(value + '' + chance.word());
@@ -135,7 +152,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       elm.target = e.target;
     };
     demo.appendListItem = function() {
-      demo.push('list', {name: ''});
+      demo.push('list', {
+        name: ''
+      });
     };
     demo.init = function() {
       demo.positionTarget = document.getElementById('fruitsPositioned');
@@ -143,8 +162,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     window.addEventListener('WebComponentsReady', function() {
       demo.init();
     });
+  })(document.querySelector('#demo'));
   </script>
-
 </body>
 
 </html>
