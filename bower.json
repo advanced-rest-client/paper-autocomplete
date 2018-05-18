@@ -2,7 +2,7 @@
   "name": "paper-autocomplete",
   "description": "Paper autocomplete element to be used with paper-, iron- and regular inputs.",
   "license": "Apache-2.0",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "authors": [
     "Pawel Psztyc <jarrodek@gmail.com>",
     "The Advanced REST Client authors"
@@ -48,8 +48,5 @@
     "paper-input": "PolymerElements/paper-input#^2.1.1",
     "paper-button": "polymerelements/paper-button#^2.0.0",
     "chance": "^1.0.0"
-  },
-  "resolutions": {
-    "polymer": "^2.0.0"
   }
 }
