@@ -1,6 +1,6 @@
 {
   "name": "@advanced-rest-client/paper-autocomplete",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "license": "Apache-2.0",
   "description": "Paper autocomplete element to be used with paper-, iron- and regular inputs.",
   "authors": [
