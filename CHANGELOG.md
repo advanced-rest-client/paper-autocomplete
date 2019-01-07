@@ -1,3 +1,9 @@
+<a name="2.0.6"></a>
+## [2.0.6](https://github.com/advanced-rest-client/paper-autocomplete/compare/2.0.2...2.0.6) (2019-01-07)
+
+
+
+
 <a name="2.0.4"></a>
 ## [2.0.4](https://github.com/advanced-rest-client/paper-autocomplete/compare/2.0.2...2.0.4) (2018-05-18)
 
