@@ -1,20 +1,10 @@
 <!doctype html>
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
 <html>
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>Paper Autocomplete Demo</title>
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
   <link rel="import" href="../../paper-styles/paper-styles.html">
   <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
   <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
@@ -22,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="import" href="../../paper-button/paper-button.html">
   <link rel="import" href="../../paper-input/paper-input-container.html">
   <link rel="import" href="../../paper-input/paper-input.html">
+  <link rel="import" href="../../iron-input/iron-input.html">
   <link rel="import" href="../paper-autocomplete.html">
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
@@ -39,7 +30,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <body>
   <dom-bind id="demo">
     <template is="dom-bind">
-      <div class="vertical-section vertical-section-container c`entered relative">
+      <div class="vertical-section vertical-section-container centered relative">
         <p>Suggestions with predefined list</p>
         <div class="relative">
           <paper-input label="Enter fruit name" id="fruits"></paper-input>
@@ -52,11 +43,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <span>[[selectedCounter]]</span>
         </p>
       </div>
+
+      <div class="vertical-section vertical-section-container centered relative">
+        <p>Has predefined value</p>
+        <div class="relative">
+          <paper-input label="Enter fruit name" id="fruits2" value="Apple"></paper-input>
+          <paper-autocomplete open-on-focus source="[[suggestions]]" id="fruitsSuggestions2"></paper-autocomplete>
+        </div>
+      </div>
+
       <div class="vertical-section vertical-section-container centered relative">
         <p>Attach autocomplete to existing input field</p>
         <div class="relative">
           <paper-input-container>
-            <label>Enter friut name</label>
+            <label slot="label">Enter friut name</label>
             <input slot="input" type="text" value="{{externalInput::input}}" id="externalField" />
           </paper-input-container>
           <paper-autocomplete loader id="fruitExternal" on-query="_asyncSuggestions"></paper-autocomplete>
@@ -122,6 +122,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     ];
     demo.$.fruitsSuggestions.target = demo.$.fruits;
+    demo.$.fruitsSuggestions2.target = demo.$.fruits2;
     demo.$.fruitExternal.target = demo.$.externalField;
     demo._selectedCalled = function() {
       demo.selectedCounter++;
@@ -130,22 +131,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       demo.queryCounter++;
     };
     demo._asyncSuggestions = function(e) {
-      var value = e.detail.value;
+      const value = e.detail.value;
       setTimeout(() => {
-        var suggestions = [];
-        for (var i = 0; i < 25; i++) {
+        const suggestions = [];
+        for (let i = 0; i < 25; i++) {
           suggestions.push(value + '' + chance.word());
         }
         demo.$.fruitExternal.source = suggestions;
       }, 1000);
     };
     demo.removeItem = function(e) {
-      var index = this.$.list.indexForElement(e.target);
+      const index = this.$.list.indexForElement(e.target);
       this.splice('list', index, 1);
     };
     demo.inputFocus = function(e) {
-      var index = this.$.list.indexForElement(e.target);
-      var elm = document.querySelector('.form-row:nth-child(' + (index + 1) + ') paper-autocomplete');
+      const index = this.$.list.indexForElement(e.target);
+      const elm = document.querySelector('.form-row:nth-child(' + (index + 1) + ') paper-autocomplete');
       if (!elm) {
         return;
       }

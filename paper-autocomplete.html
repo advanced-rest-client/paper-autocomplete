@@ -14,6 +14,7 @@ License for the specific language governing permissions and limitations under
 the License.
 -->
 <link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../polymer/lib/utils/render-status.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-ripple/paper-ripple.html">
 <link rel="import" href="../paper-styles/shadow.html">
@@ -147,15 +148,15 @@ the License.
    * | `--paper-autocomplete-background-color` | Background color of suggestions | `{}` |
    *
    * @customElement
-   * @group UI Elements
-   * @memberof UI Elements
+   * @memberof UiElements
    * @appliesMixin Polymer.IronOverlayBehavior
    * @appliesMixin Polymer.IronScrollTargetBehavior
    * @polymer
    * @demo demo/index.html
-   * @hero hero.svg
    */
-  class PaperAutocomplete extends Polymer.mixinBehaviors([Polymer.IronOverlayBehavior, Polymer.IronScrollTargetBehavior], Polymer.Element) {
+  class PaperAutocomplete extends
+    Polymer.mixinBehaviors(
+      [Polymer.IronOverlayBehavior, Polymer.IronScrollTargetBehavior], Polymer.Element) {
     static get is() {
       return 'paper-autocomplete';
     }
@@ -338,24 +339,12 @@ the License.
           this._filterSuggestions();
           return;
         } else {
-          //this is a new query
+          // this is a new query
           this._previousQuery = null;
           this._setSuggestions([]);
         }
-      } else if (!value && this._previousQuery === undefined) {
-        // First query without the value means initialization.
-        return;
       }
-
-      const ev = new CustomEvent('query', {
-        detail: {
-          value: value
-        },
-        cancelable: true,
-        bubbles: true,
-        composed: true
-      });
-      this.dispatchEvent(ev);
+      this._disaptchQuery(value);
       this._previousQuery = value;
       if (!this.opened) {
         this.selectedItem = 0;
@@ -363,16 +352,25 @@ the License.
       this._filterSuggestions();
       this._setLoading(true);
     }
-
+    /**
+     * Disaptches query event and returns it.
+     * @param {String} value Current input value.
+     * @return {CustomEvent}
+     */
+    _disaptchQuery(value) {
+      const e = new CustomEvent('query', {
+        detail: {
+          value
+        }
+      });
+      this.dispatchEvent(e);
+      return e;
+    }
     /**
      * Filter `source` array for current value.
      */
     _filterSuggestions() {
-      //source, _oldTarget, isAttached
-      if (!this.isAttached || !this._oldTarget) {
-        return;
-      }
-      if (this._previousQuery === undefined) {
+      if (!this.isAttached || !this._oldTarget || this._previousQuery === undefined) {
         return;
       }
       this._setLoading(false);
@@ -388,20 +386,24 @@ the License.
       };
       const filtered = query ? source.filter(filter) : source;
       if (filtered.length === 0) {
-        this.close();
+        this.opened = false;
         return;
       }
       filtered.sort(function(a, b) {
         const valueA = (typeof a === 'string') ? a : a.value;
         const valueB = (typeof b === 'string') ? b : b.value;
-        const aIndex = valueA.indexOf(query);
-        const bIndex = valueB.indexOf(query);
-
-        if (aIndex === 0 && bIndex !== 0) {
-          return 1;
+        const lowerA = valueA.toLowerCase();
+        const lowerB = valueB.toLowerCase();
+        const aIndex = lowerA.indexOf(query);
+        const bIndex = lowerB.indexOf(query);
+        if (aIndex === bIndex) {
+          return valueA.localeCompare(valueB);
         }
-        if (aIndex !== 0 && bIndex === 0) {
+        if (aIndex === 0 && bIndex !== 0) {
           return -1;
+        }
+        if (bIndex === 0 && aIndex !== 0) {
+          return 1;
         }
         if (valueA > valueB) {
           return 1;
@@ -409,7 +411,7 @@ the License.
         if (valueA < valueB) {
           return -1;
         }
-        return 0;
+        return valueA.localeCompare(valueB);
       });
       this._setSuggestions(filtered);
       this.notifyResize();
@@ -455,9 +457,10 @@ the License.
         return;
       }
       let value = this.$.repeater.itemForElement(this.$.selector.selectedItem);
-      if (typeof value !== 'string') {
+      if (typeof value !== 'string' && typeof value.value !== 'undefined') {
         value = value.value;
       }
+      value = String(value);
       setTimeout(() => this._inform(value), 1);
     }
     /**
@@ -468,11 +471,9 @@ the License.
     _inform(value) {
       const ev = new CustomEvent('selected', {
         detail: {
-          value: value
+          value
         },
-        cancelable: true,
-        bubbles: true,
-        composed: true
+        cancelable: true
       });
       this.dispatchEvent(ev);
       if (!ev.defaultPrevented) {
@@ -534,23 +535,21 @@ the License.
      * Opens the autocomplete if `openOnFocus` is set.
      */
     _targetFocus() {
-      if (!this.openOnFocus || this.opened) {
-        return;
-      }
-      this._previousQuery = this._previousQuery || '';
-      if (this.__autocompleteFocus) {
+      if (!this.openOnFocus || this.opened || this.__autocompleteFocus) {
         return;
       }
       this.__autocompleteFocus = true;
-      setTimeout(() => {
+      Polymer.RenderStatus.afterNextRender(this, () => {
         this.__autocompleteFocus = false;
         this._valueChanged();
-      }, 20);
+      });
     }
     /**
      * Prohibits click event propagation when the overlay is opened so
      * the overlay manager won't close it immidietly after focusing (with click
      * event included) in the target field.
+     *
+     * @param {ClickEvent} e
      */
     _targetClick(e) {
       if (!this.opened) {

@@ -1,13 +1,4 @@
 <!doctype html>
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
 <html>
 
 <head>
@@ -17,7 +8,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script src="../../web-component-tester/browser.js"></script>
   <script src="../../iron-test-helpers/test-helpers.js"></script>
   <script src="../../iron-test-helpers/mock-interactions.js"></script>
-  <!-- Step 1: import the element to test -->
   <link rel="import" href="../paper-autocomplete.html">
 </head>
 
@@ -27,20 +17,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-autocomplete></paper-autocomplete>
     </template>
   </test-fixture>
+
   <test-fixture id="input">
     <template>
       <paper-autocomplete id="fruitsSuggestions"></paper-autocomplete>
     </template>
   </test-fixture>
+
   <script>
   function notifyInput(target) {
-    var ev = document.createEvent('Event');
+    let ev = document.createEvent('Event');
     ev.initEvent('input', true, false);
     target.dispatchEvent(ev);
   }
+
+  function wrapInput(element) {
+    const input = document.createElement('input');
+    element.target = input;
+    return input;
+  }
+
   /* global assert, fixture */
   suite('basic', function() {
-    var suggestions;
+    let suggestions;
 
     setup(function() {
       suggestions = fixture('basic');
@@ -56,15 +55,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   });
 
   suite('input', function() {
-    var suggestions;
+    let suggestions;
 
     setup(function() {
       suggestions = fixture('input');
     });
 
     test('Should query on input change', function() {
-      var input = document.createElement('input');
-      suggestions.target = input;
+      const input = wrapInput(suggestions);
       input.value = 'test';
       notifyInput(input);
       assert.equal(input.value, suggestions._previousQuery,
@@ -72,24 +70,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     test('Should fire query event', function(done) {
-      var word = 'TEST';
-      var clb = function(e) {
+      let word = 'TEST';
+      let clb = function(e) {
         suggestions.removeEventListener('parsed', clb);
-        var query = e.detail.value;
+        let query = e.detail.value;
         assert.equal(word, query,
           'word equals query');
         done();
       };
-      var input = document.createElement('input');
-      suggestions.target = input;
+      const input = wrapInput(suggestions);
       input.value = word;
       suggestions.addEventListener('query', clb);
       notifyInput(input);
     });
 
     test('Should filter suggestions', function(done) {
-      var word = 'TEST';
-      var clb = function() {
+      let word = 'TEST';
+      let clb = function() {
         suggestions.removeEventListener('query', clb);
         suggestions.source = [word, word + '2', 'etra73hxis'];
         setTimeout(function() {
@@ -100,8 +97,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           done();
         }, 1);
       };
-      var input = document.createElement('input');
-      suggestions.target = input;
+      const input = wrapInput(suggestions);
       input.value = word;
       suggestions.addEventListener('query', clb);
       notifyInput(input);
@@ -109,15 +105,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   });
 
   suite('suggestions', function() {
-    var suggestions;
-    var input;
-    var source = ['Apple', 'Appli' ,'Applo'];
+    let suggestions;
+    let input;
+    const source = ['Apple', 'Appli', 'Applo'];
 
     setup(function(done) {
       suggestions = fixture('input');
       suggestions.source = source;
-      input = document.createElement('input');
-      suggestions.target = input;
+      input = wrapInput(suggestions);
       setTimeout(done, 1);
     });
 
@@ -128,45 +123,45 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     test('Should select first item on start.', function(done) {
-      var repeater = Polymer.dom(suggestions.root).querySelector('#repeater');
-      var selector = Polymer.dom(suggestions.root).querySelector('#selector');
+      let repeater = Polymer.dom(suggestions.root).querySelector('#repeater');
+      let selector = Polymer.dom(suggestions.root).querySelector('#selector');
       input.value = 'App';
       notifyInput(input);
       setTimeout(function() {
-        var value = repeater.itemForElement(selector.selectedItem);
+        let value = repeater.itemForElement(selector.selectedItem);
         assert.equal(value, source[0]);
         done();
       }, 100);
     });
 
     test('Should select `next` suggestion.', function(done) {
-      var repeater = Polymer.dom(suggestions.root).querySelector('#repeater');
-      var selector = Polymer.dom(suggestions.root).querySelector('#selector');
+      let repeater = Polymer.dom(suggestions.root).querySelector('#repeater');
+      let selector = Polymer.dom(suggestions.root).querySelector('#selector');
       input.value = 'App';
       notifyInput(input);
       setTimeout(function() {
         suggestions.selectNext();
-        var value = repeater.itemForElement(selector.selectedItem);
+        let value = repeater.itemForElement(selector.selectedItem);
         assert.equal(value, source[1]);
         done();
       }, 100);
     });
 
     test('Should select `previous` suggestion.', function(done) {
-      var repeater = Polymer.dom(suggestions.root).querySelector('#repeater');
-      var selector = Polymer.dom(suggestions.root).querySelector('#selector');
+      let repeater = Polymer.dom(suggestions.root).querySelector('#repeater');
+      let selector = Polymer.dom(suggestions.root).querySelector('#selector');
       input.value = 'App';
       notifyInput(input);
       setTimeout(function() {
         suggestions.selectPrevious();
-        var value = repeater.itemForElement(selector.selectedItem);
+        let value = repeater.itemForElement(selector.selectedItem);
         assert.equal(value, source[2]);
         done();
       }, 100);
     });
 
     test('Should fire `selected` event.', function(done) {
-      var clb = function() {
+      let clb = function() {
         suggestions.removeEventListener('selected', clb);
         done();
       };
@@ -180,7 +175,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     test('Should update the input field.', function(done) {
-      var clb = function() {
+      let clb = function() {
         suggestions.removeEventListener('selected', clb);
         setTimeout(function() {
           assert.equal(input.value, 'Apple');
@@ -197,7 +192,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     });
 
     test('Should not update the input field.', function(done) {
-      var clb = function(e) {
+      let clb = function(e) {
         e.preventDefault();
         suggestions.removeEventListener('selected', clb);
 
@@ -213,6 +208,441 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       setTimeout(function() {
         suggestions.acceptSelection();
       }, 100);
+    });
+  });
+
+  suite('_valueChanged()', () => {
+    let element;
+    setup(function(done) {
+      element = fixture('basic');
+      flush(() => done());
+    });
+
+    test('Does nothing when not attached', () => {
+      element.isAttached = false;
+      const spy = sinon.spy(element, '_filterSuggestions');
+      element._valueChanged();
+      assert.isFalse(spy.called);
+    });
+
+    test('Does nothing when event target not set', () => {
+      element._oldTarget = undefined;
+      const spy = sinon.spy(element, '_filterSuggestions');
+      element._valueChanged();
+      assert.isFalse(spy.called);
+    });
+
+    test('Does nothing when no value and no previous query set', () => {
+      element._oldTarget = undefined;
+      const spy = sinon.spy(element, '_filterSuggestions');
+      element._valueChanged();
+      assert.isFalse(spy.called);
+    });
+
+    test('Calls _disaptchQuery() when no previous query', () => {
+      const input = wrapInput(element);
+      input.value = 'test';
+      element._previousQuery = undefined;
+      const spy = sinon.spy(element, '_disaptchQuery');
+      element._valueChanged();
+      assert.isTrue(spy.called);
+    });
+
+    test('Sets "_previousQuery"', () => {
+      const input = wrapInput(element);
+      input.value = 'test';
+      element._previousQuery = undefined;
+      element._valueChanged();
+      assert.equal(element._previousQuery, 'test');
+    });
+
+    test('Sets "selectedItem"', () => {
+      const input = wrapInput(element);
+      input.value = 'test';
+      element._previousQuery = undefined;
+      element.selectedItem = undefined;
+      element._valueChanged();
+      assert.equal(element.selectedItem, 0);
+    });
+
+    test('Keeps old "selectedItem" when opened', () => {
+      const input = wrapInput(element);
+      input.value = 'test';
+      element._previousQuery = undefined;
+      element.selectedItem = 1;
+      element.opened = true;
+      element._valueChanged();
+      assert.equal(element.selectedItem, 1);
+    });
+
+    test('Calls _filterSuggestions()', () => {
+      const input = wrapInput(element);
+      input.value = 'test';
+      element._previousQuery = undefined;
+      const spy = sinon.spy(element, '_filterSuggestions');
+      element._valueChanged();
+      assert.isTrue(spy.called);
+    });
+
+    test('Reuses data from previous query', () => {
+      const input = wrapInput(element);
+      input.value = 'test';
+      element._previousQuery = 'tes';
+      const filterSpy = sinon.spy(element, '_filterSuggestions');
+      const querySpy = sinon.spy(element, '_disaptchQuery');
+      element._valueChanged();
+      assert.isTrue(filterSpy.called, 'Filter suggestions is called');
+      assert.isFalse(querySpy.called, '_disaptchQuery() is not called');
+      assert.equal(element._previousQuery, 'test', '_previousQuery is set');
+    });
+
+    test('Resets the query if input is different than the last one', () => {
+      const input = wrapInput(element);
+      input.value = 'other';
+      element._previousQuery = 'test';
+      const filterSpy = sinon.spy(element, '_filterSuggestions');
+      const querySpy = sinon.spy(element, '_disaptchQuery');
+      element._valueChanged();
+      assert.isTrue(filterSpy.called, 'Filter suggestions is called');
+      assert.isTrue(querySpy.called, '_disaptchQuery() is called');
+      assert.equal(element._previousQuery, 'other', '_previousQuery is set');
+    });
+  });
+
+  suite('_disaptchQuery()', () => {
+    let element;
+    setup(function() {
+      element = fixture('basic');
+    });
+
+    test('Dispatches the event', () => {
+      const spy = sinon.spy();
+      element.addEventListener('query', spy);
+      element._disaptchQuery('test');
+      assert.isTrue(spy.called);
+    });
+
+    test('Returns the event', () => {
+      const e = element._disaptchQuery('test');
+      assert.typeOf(e, 'customevent');
+    });
+
+    test('Event does not bubble', () => {
+      const e = element._disaptchQuery('test');
+      assert.isFalse(e.bubbles);
+    });
+
+    test('Event is not cancelable', () => {
+      const e = element._disaptchQuery('test');
+      assert.isFalse(e.cancelable);
+    });
+
+    test('Event has value on the detail', () => {
+      const e = element._disaptchQuery('test');
+      assert.equal(e.detail.value, 'test');
+    });
+  });
+
+  suite('_filterSuggestions()', () => {
+    let element;
+    setup(function(done) {
+      element = fixture('basic');
+      flush(() => done());
+    });
+
+    test('Does nothing when not attached', () => {
+      element.isAttached = false;
+      const spy = sinon.spy(element, '_setSuggestions');
+      element._filterSuggestions();
+      assert.isFalse(spy.called);
+    });
+
+    test('Does nothing when event target not set', () => {
+      element._oldTarget = undefined;
+      const spy = sinon.spy(element, '_setSuggestions');
+      element._filterSuggestions();
+      assert.isFalse(spy.called);
+    });
+
+    test('Does nothing when no value and no previous query set', () => {
+      element._oldTarget = undefined;
+      const spy = sinon.spy(element, '_setSuggestions');
+      element._filterSuggestions();
+      assert.isFalse(spy.called);
+    });
+
+    test('Filters out string values', () => {
+      element.source = ['a', 'aa', 'b', 'ab'];
+      element._previousQuery = 'a';
+      wrapInput(element);
+      element._filterSuggestions();
+      assert.typeOf(element.suggestions, 'array');
+      assert.deepEqual(element.suggestions, ['a', 'aa', 'ab']);
+    });
+
+    test('Filters out string values - cap query', () => {
+      element.source = ['a', 'aa', 'b', 'ab'];
+      element._previousQuery = 'A';
+      wrapInput(element);
+      element._filterSuggestions();
+      assert.typeOf(element.suggestions, 'array');
+      assert.deepEqual(element.suggestions, ['a', 'aa', 'ab']);
+    });
+
+    test('Filters out string values - cap items', () => {
+      element.source = ['A', 'Aa', 'b', 'Ab'];
+      element._previousQuery = 'a';
+      element._filterSuggestions();
+      wrapInput(element);
+      assert.typeOf(element.suggestions, 'array');
+      assert.deepEqual(element.suggestions, ['A', 'Aa', 'Ab']);
+    });
+
+    test('Filters out object values', () => {
+      element.source = [{value: 'a'}, {value: 'aa'}, {value: 'b'}, {value: 'ab'}];
+      element._previousQuery = 'a';
+      wrapInput(element);
+      element._filterSuggestions();
+      assert.typeOf(element.suggestions, 'array');
+      assert.deepEqual(element.suggestions, [{value: 'a'}, {value: 'aa'}, {value: 'ab'}]);
+    });
+
+    test('Filters out object values - cap query', () => {
+      element.source = [{value: 'a'}, {value: 'aa'}, {value: 'b'}, {value: 'ab'}];
+      element._previousQuery = 'A';
+      wrapInput(element);
+      element._filterSuggestions();
+      assert.typeOf(element.suggestions, 'array');
+      assert.deepEqual(element.suggestions, [{value: 'a'}, {value: 'aa'}, {value: 'ab'}]);
+    });
+
+    test('Filters out object values - cap items', () => {
+      element.source = [{value: 'A'}, {value: 'Aa'}, {value: 'b'}, {value: 'Ab'}];
+      element._previousQuery = 'a';
+      wrapInput(element);
+      element._filterSuggestions();
+      assert.typeOf(element.suggestions, 'array');
+      assert.deepEqual(element.suggestions, [{value: 'A'}, {value: 'Aa'}, {value: 'Ab'}]);
+    });
+
+    test('Returns all when no query', () => {
+      element.source = [{value: 'a'}, {value: 'aa'}, {value: 'b'}, {value: 'ab'}];
+      element._previousQuery = '';
+      wrapInput(element);
+      element._filterSuggestions();
+      assert.typeOf(element.suggestions, 'array');
+      assert.deepEqual(element.suggestions, element.source);
+    });
+
+    test('Closes element when no items after filtered', () => {
+      element.source = [{value: 'a'}, {value: 'aa'}];
+      element._previousQuery = 'b';
+      element.opened = true;
+      wrapInput(element);
+      element._filterSuggestions();
+      assert.isFalse(element.opened);
+    });
+
+    test('Sorts the results #1', () => {
+      element.source = [{value: 'zoab'}, {value: 'saab'}, {value: 'ab'}, {value: 'Ab'}];
+      element._previousQuery = 'ab';
+      wrapInput(element);
+      element._filterSuggestions();
+      assert.deepEqual(element.suggestions, [{value: 'ab'}, {value: 'Ab'}, {value: 'saab'}, {value: 'zoab'}]);
+    });
+
+    test('Sorts the results #2', () => {
+      element.source = [{value: 'xab'}, {value: 'xxab'}, {value: 'abxx'}];
+      element._previousQuery = 'ab';
+      wrapInput(element);
+      element._filterSuggestions();
+      assert.deepEqual(element.suggestions, [{value: 'abxx'}, {value: 'xab'}, {value: 'xxab'}]);
+    });
+
+    test('Sorts the results #3', () => {
+      element.source = [{value: 'xxxab'}, {value: 'ab'}];
+      element._previousQuery = 'ab';
+      wrapInput(element);
+      element._filterSuggestions();
+      assert.deepEqual(element.suggestions, [{value: 'ab'}, {value: 'xxxab'}]);
+    });
+
+    test('Calls _ensureSelection()', () => {
+      element.source = [{value: 'a'}, {value: 'aa'}];
+      element._previousQuery = 'a';
+      const spy = sinon.spy(element, '_ensureSelection');
+      wrapInput(element);
+      element._filterSuggestions();
+      assert.isTrue(spy.called);
+    });
+
+    test('Opens the overlay', () => {
+      element.source = [{value: 'a'}, {value: 'aa'}];
+      element._previousQuery = 'a';
+      wrapInput(element);
+      element._filterSuggestions();
+      assert.isTrue(element.opened);
+    });
+  });
+
+  suite('selectPrevious()', () => {
+    let element;
+    const source = ['Apple', 'Appli', 'Applo'];
+
+    setup(function(done) {
+      element = fixture('basic');
+      element.source = source;
+      wrapInput(element);
+      element.opened = true;
+      element._setSuggestions(source);
+      flush(() => done());
+    });
+
+    test('Selectes previous element', () => {
+      element.selectedItem = 1;
+      element.selectPrevious();
+      assert.equal(element.selectedItem, 0);
+    });
+
+    test('Opens the overlay', () => {
+      element.opened = false;
+      element.selectedItem = 1;
+      element.selectPrevious();
+      assert.isTrue(element.opened);
+    });
+
+    test('Does nothing when no suggestions', () => {
+      element._setSuggestions([]);
+      element.opened = false;
+      element.selectedItem = 1;
+      element.selectPrevious();
+      assert.isFalse(element.opened);
+    });
+
+    test('Goes to the end of the list', () => {
+      element.selectedItem = 0;
+      element.selectPrevious();
+      assert.equal(element.selectedItem, 2);
+    });
+
+    test('Calls ensureItemVisible()', () => {
+      const spy = sinon.spy(element, 'ensureItemVisible');
+      element.selectedItem = 1;
+      element.selectPrevious();
+      assert.isTrue(spy.called);
+    });
+  });
+
+  suite('selectNext()', () => {
+    let element;
+    const source = ['Apple', 'Appli', 'Applo'];
+
+    setup(function(done) {
+      element = fixture('basic');
+      element.source = source;
+      wrapInput(element);
+      element.opened = true;
+      element._setSuggestions(source);
+      flush(() => done());
+    });
+
+    test('Selectes previous element', () => {
+      element.selectedItem = 1;
+      element.selectNext();
+      assert.equal(element.selectedItem, 2);
+    });
+
+    test('Opens the overlay', () => {
+      element.opened = false;
+      element.selectedItem = 1;
+      element.selectNext();
+      assert.isTrue(element.opened);
+    });
+
+    test('Does nothing when no suggestions', () => {
+      element._setSuggestions([]);
+      element.opened = false;
+      element.selectedItem = 1;
+      element.selectNext();
+      assert.isFalse(element.opened);
+    });
+
+    test('Goes to the start of the list', () => {
+      element.selectedItem = 2;
+      element.selectNext();
+      assert.equal(element.selectedItem, 0);
+    });
+
+    test('Calls ensureItemVisible()', () => {
+      const spy = sinon.spy(element, 'ensureItemVisible');
+      element.selectedItem = 1;
+      element.selectNext();
+      assert.isTrue(spy.called);
+    });
+  });
+
+  suite('_targetFocus()', () => {
+    let element;
+    const source = ['Apple', 'Appli', 'Applo'];
+
+    setup(function(done) {
+      element = fixture('basic');
+      element.source = source;
+      wrapInput(element);
+      element._setSuggestions(source);
+      element.openOnFocus = true;
+      flush(() => done());
+    });
+
+    test('Does nothing when openOnFocus is not set', () => {
+      element.openOnFocus = false;
+      element._targetFocus();
+      assert.isUndefined(element.__autocompleteFocus);
+    });
+
+    test('Does nothing when opened', () => {
+      element.opened = true;
+      element._targetFocus();
+      assert.isUndefined(element.__autocompleteFocus);
+    });
+
+    test('Does nothing when __autocompleteFocus is already set', () => {
+      element.__autocompleteFocus = 1;
+      element._targetFocus();
+      assert.equal(element.__autocompleteFocus, 1);
+    });
+
+    test('Sets __autocompleteFocus', (done) => {
+      element._targetFocus();
+      assert.isTrue(element.__autocompleteFocus);
+      Polymer.RenderStatus.afterNextRender(element, () => {
+        done();
+      });
+    });
+
+    test('Sets __autocompleteFocus for debouncer', (done) => {
+      element._targetFocus();
+      assert.isTrue(element.__autocompleteFocus);
+      Polymer.RenderStatus.afterNextRender(element, () => {
+        done();
+      });
+    });
+
+    test('Re-sets __autocompleteFocus', (done) => {
+      element._targetFocus();
+      Polymer.RenderStatus.afterNextRender(element, () => {
+        assert.isFalse(element.__autocompleteFocus);
+        done();
+      });
+    });
+
+    test('Calls _valueChanged()', (done) => {
+      element._targetFocus();
+      const spy = sinon.spy(element, '_valueChanged');
+      Polymer.RenderStatus.afterNextRender(element, () => {
+        assert.isTrue(spy.called);
+        done();
+      });
     });
   });
   </script>

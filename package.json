@@ -1,6 +1,6 @@
 {
   "name": "@advanced-rest-client/paper-autocomplete",
-  "version": "2.0.4",
+  "version": "2.0.6",
   "license": "Apache-2.0",
   "description": "Paper autocomplete element to be used with paper-, iron- and regular inputs.",
   "authors": [
@@ -14,7 +14,7 @@
     "update-types": "gen-typescript-declarations --deleteExisting --outDir ."
   },
   "devDependencies": {
-    "@polymer/gen-typescript-declarations": "^1.1.1"
+    "@polymer/gen-typescript-declarations": "^1.6.0"
   },
   "private": false,
   "repository": {
