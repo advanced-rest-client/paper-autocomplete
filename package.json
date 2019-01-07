@@ -14,7 +14,7 @@
     "update-types": "gen-typescript-declarations --deleteExisting --outDir ."
   },
   "devDependencies": {
-    "@polymer/gen-typescript-declarations": "^1.1.1"
+    "@polymer/gen-typescript-declarations": "^1.6.0"
   },
   "private": false,
   "repository": {
