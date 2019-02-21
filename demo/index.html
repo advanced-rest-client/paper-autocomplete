@@ -4,16 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
   <title>Paper Autocomplete Demo</title>
-  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
-  <link rel="import" href="../../paper-styles/paper-styles.html">
-  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../paper-button/paper-button.html">
-  <link rel="import" href="../../paper-input/paper-input-container.html">
-  <link rel="import" href="../../paper-input/paper-input.html">
-  <link rel="import" href="../../iron-input/iron-input.html">
-  <link rel="import" href="../paper-autocomplete.html">
+
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+  <script type="module">
+    import '@polymer/polymer/lib/elements/dom-bind.js';
+    import '@polymer/iron-demo-helpers/demo-pages-shared-styles.js';
+    import '@polymer/iron-demo-helpers/demo-snippet.js';
+    import '@polymer/paper-styles/paper-styles.js';
+    import '@polymer/paper-button/paper-button.js';
+    import '@polymer/paper-input/paper-input-container.js';
+    import '@polymer/paper-input/paper-input.js';
+    import '@polymer/iron-input/iron-input.js';
+    import '../paper-autocomplete.js';
+  </script>
+
   <custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
     .form .form-row paper-autocomplete {
@@ -34,12 +39,12 @@
         <p>Suggestions with predefined list</p>
         <div class="relative">
           <paper-input label="Enter fruit name" id="fruits"></paper-input>
-          <paper-autocomplete open-on-focus on-query="_queryCalled" on-selected="_selectedCalled" source="[[suggestions]]" id="fruitsSuggestions"></paper-autocomplete>
+          <paper-autocomplete open-on-focus="" on-query="_queryCalled" on-selected="_selectedCalled" source="[[suggestions]]" id="fruitsSuggestions"></paper-autocomplete>
         </div>
         <p>
-          <span>`query` event fired:</span>
+          <span>"query" event fired:</span>
           <span>[[queryCounter]]</span>,
-          <span>`selected` event fired:</span>
+          <span>"selected" event fired:</span>
           <span>[[selectedCounter]]</span>
         </p>
       </div>
@@ -48,7 +53,7 @@
         <p>Has predefined value</p>
         <div class="relative">
           <paper-input label="Enter fruit name" id="fruits2" value="Apple"></paper-input>
-          <paper-autocomplete open-on-focus source="[[suggestions]]" id="fruitsSuggestions2"></paper-autocomplete>
+          <paper-autocomplete open-on-focus="" source="[[suggestions]]" id="fruitsSuggestions2"></paper-autocomplete>
         </div>
       </div>
 
@@ -57,39 +62,43 @@
         <div class="relative">
           <paper-input-container>
             <label slot="label">Enter friut name</label>
-            <input slot="input" type="text" value="{{externalInput::input}}" id="externalField" />
+            <input slot="input" type="text" value="{{externalInput::input}}" id="externalField">
           </paper-input-container>
-          <paper-autocomplete loader id="fruitExternal" on-query="_asyncSuggestions"></paper-autocomplete>
+          <paper-autocomplete loader="" id="fruitExternal" on-query="_asyncSuggestions"></paper-autocomplete>
         </div>
       </div>
+
       <div class="vertical-section vertical-section-container centered relative">
         <p>Autocomplete in <b>dom-repeat</b></p>
         <div class="form">
           <template is="dom-repeat" id="list" items="{{list}}">
             <div class="form-row relative">
-              <paper-input-container class="item-name" no-label-float inline>
+              <paper-input-container class="item-name" no-label-float="" inline="">
                 <iron-input slot="input">
                   <input on-focus="inputFocus" type="text" value="{{item.name::input}}" placeholder="Fruit name">
                 </iron-input>
               </paper-input-container>
               <paper-button title="Remove fruit" on-tap="removeItem">remove</paper-button>
-              <paper-autocomplete open-on-focus source="[[suggestions]]"></paper-autocomplete>
+              <paper-autocomplete open-on-focus="" source="[[suggestions]]"></paper-autocomplete>
             </div>
           </template>
         </div>
-        <paper-button raised on-tap="appendListItem">Add</paper-button>
+        <paper-button raised="" on-tap="appendListItem">Add</paper-button>
       </div>
+
       <div class="vertical-section vertical-section-container centered relative">
         <p>Autocomplete can be positioned</p>
         <div class="relative">
           <paper-input label="Enter fruit name" id="fruitsPositioned"></paper-input>
-          <paper-autocomplete open-on-focus target="[[positionTarget]]" position-target="[[positionTarget]]" dynamic-align vertical-align="top" horizontal-align="left" vertical-offset="56" source="[[suggestions]]"></paper-autocomplete>
+          <paper-autocomplete open-on-focus="" target="[[positionTarget]]"
+            position-target="[[positionTarget]]" dynamic-align="" vertical-align="top"
+            horizontal-align="left" vertical-offset="56" source="[[suggestions]]"></paper-autocomplete>
         </div>
       </div>
     </template>
   </dom-bind>
-  <script src="../../chance/chance.js"></script>
-  <script>
+  <script src="../../../chance/chance.js"></script>
+  <script type="module">
   /* global chance */
   (function(demo) {
     demo.selectedCounter = 0;
@@ -166,5 +175,4 @@
   })(document.querySelector('#demo'));
   </script>
 </body>
-
 </html>

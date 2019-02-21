@@ -4,11 +4,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-  <script src="../../web-component-tester/browser.js"></script>
-  <script src="../../iron-test-helpers/test-helpers.js"></script>
-  <script src="../../iron-test-helpers/mock-interactions.js"></script>
-  <link rel="import" href="../paper-autocomplete.html">
+
+  <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+  <script src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+  <script src="../node_modules/mocha/mocha.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script src="../node_modules/wct-mocha/wct-mocha.js"></script>
+  <script src="../node_modules/sinon/pkg/sinon.js"></script>
+
+  <script type="module" src="../paper-autocomplete.js"></script>
 </head>
 
 <body>
@@ -24,11 +28,12 @@
     </template>
   </test-fixture>
 
-  <script>
+  <script type="module">
+  import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
   function notifyInput(target) {
-    let ev = document.createEvent('Event');
-    ev.initEvent('input', true, false);
-    target.dispatchEvent(ev);
+    let e = document.createEvent('Event');
+    e.initEvent('input', true, false);
+    target.dispatchEvent(e);
   }
 
   function wrapInput(element) {
@@ -37,7 +42,6 @@
     return input;
   }
 
-  /* global assert, fixture */
   suite('basic', function() {
     let suggestions;
 
@@ -123,8 +127,8 @@
     });
 
     test('Should select first item on start.', function(done) {
-      let repeater = Polymer.dom(suggestions.root).querySelector('#repeater');
-      let selector = Polymer.dom(suggestions.root).querySelector('#selector');
+      let repeater = suggestions.shadowRoot.querySelector('#repeater');
+      let selector = suggestions.shadowRoot.querySelector('#selector');
       input.value = 'App';
       notifyInput(input);
       setTimeout(function() {
@@ -135,8 +139,8 @@
     });
 
     test('Should select `next` suggestion.', function(done) {
-      let repeater = Polymer.dom(suggestions.root).querySelector('#repeater');
-      let selector = Polymer.dom(suggestions.root).querySelector('#selector');
+      let repeater = suggestions.shadowRoot.querySelector('#repeater');
+      let selector = suggestions.shadowRoot.querySelector('#selector');
       input.value = 'App';
       notifyInput(input);
       setTimeout(function() {
@@ -148,8 +152,8 @@
     });
 
     test('Should select `previous` suggestion.', function(done) {
-      let repeater = Polymer.dom(suggestions.root).querySelector('#repeater');
-      let selector = Polymer.dom(suggestions.root).querySelector('#selector');
+      let repeater = suggestions.shadowRoot.querySelector('#repeater');
+      let selector = suggestions.shadowRoot.querySelector('#selector');
       input.value = 'App';
       notifyInput(input);
       setTimeout(function() {
@@ -615,7 +619,7 @@
     test('Sets __autocompleteFocus', (done) => {
       element._targetFocus();
       assert.isTrue(element.__autocompleteFocus);
-      Polymer.RenderStatus.afterNextRender(element, () => {
+      afterNextRender(element, () => {
         done();
       });
     });
@@ -623,14 +627,14 @@
     test('Sets __autocompleteFocus for debouncer', (done) => {
       element._targetFocus();
       assert.isTrue(element.__autocompleteFocus);
-      Polymer.RenderStatus.afterNextRender(element, () => {
+      afterNextRender(element, () => {
         done();
       });
     });
 
     test('Re-sets __autocompleteFocus', (done) => {
       element._targetFocus();
-      Polymer.RenderStatus.afterNextRender(element, () => {
+      afterNextRender(element, () => {
         assert.isFalse(element.__autocompleteFocus);
         done();
       });
@@ -639,7 +643,7 @@
     test('Calls _valueChanged()', (done) => {
       element._targetFocus();
       const spy = sinon.spy(element, '_valueChanged');
-      Polymer.RenderStatus.afterNextRender(element, () => {
+      afterNextRender(element, () => {
         assert.isTrue(spy.called);
         done();
       });
@@ -647,5 +651,4 @@
   });
   </script>
 </body>
-
 </html>

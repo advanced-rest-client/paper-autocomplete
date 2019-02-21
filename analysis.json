@@ -4,7 +4,7 @@
     {
       "description": "# `<paper-autocomplete>`\n\nUse `paper-autocomplete` to add autocomplete functionality to the input elements.\nIt also works wilt polymer inputs.\n\nThe element works with static list of suggestions or with dynamic (asynchronous)\noperation that require calling te backend or local datastore.\nIn second case you should set `loader` property which will display a loader animation\nwhile results are loaded.\n\nYou must associate suggestions with the input field. This can be done by passing\nan element reference to the `target` property.\n\n## Example:\n\n### Static suggestions\n\n```html\n<paper-input label=\"Enter fruit name\" id=\"fruits\"></paper-input>\n<paper-autocomplete\n id=\"fruitsSuggestions\"\n target=\"[[fruits]]\"\n on-selected=\"_fruitSelected\"></paper-input-autocomplete>\n\n<script>\ndocument.querySelector('#fruitsSuggestions').source = ['Apple', 'Orange', 'Bananas'];\n< /script>\n```\n\n### Dynamic suggestions\n\n```html\n<paper-input-container>\n <label>Enter friut name</label>\n <input is=\"iron-input\" type=\"text\" value=\"{{async::input}}\" id=\"asyncField\" />\n</paper-input-container>\n<paper-autocomplete loader id=\"fruitAsync\" on-query=\"_asyncSuggestions\"></paper-input-autocomplete>\n\n<script>\n document.querySelector('#fruitAsync').target = document.querySelector('#asyncField');\n document.querySelector('#fruitAsync').addEventListener('query', (e) => {\n   const query = e.detail.value;\n   asyncQuery(query, (suggestions) => {\n     document.querySelector('#fruitAsync').source = suggestions;\n   });\n });\n< /script>\n```\n\n## Displaying the suggestions\n\nSuggestions array can be either an array of strings or objects.\nFor strings, displayed in the list and inserted to the input field value is the same item.\n\nYou can set different list item display value and value inserted into the field when the array contains\nonject. Each object must contain `value` and `display` properties where `value` property\nwill be inserted into the text field and `display` will be used to display description inside the list.\n\n## Query event\n\nThe `query` event is fired when the user query change in the way so the element is\nnot able to display suggestions properly.\nThis means if the user add a letter to previously entered value the query event will not\nfire since it already have list of suggestion that should be used to filter suggestions from.\nAnd again when the user will delete a letter the element will still have list of\nsource suggestions to filter suggestions from.\nHowever, if the user change the query entirely it will fire `query` event\nand the app will expect to `source` to change. Setting source is not mandatory.\n\n## Preventing from changing the input value\n\nTo prevent the element to update the value of the target input, listent for\n`selected` event and cancel it by calling `event.preventDefault()` function.\n\n## Styling\n\nSuggestions are positioned absolutely! You must include relative positioned parent to contain the suggestion\ndisplay in the same area.\nUse CSS properties to position the display in the left bottom corner of the input field.\n\n`<paper-autocomplete>` provides the following custom properties and mixins\nfor styling:\n\n| Custom property | Description | Default |\n----------------|-------------|----------\n| `--paper-autocomplete` | Mixin applied to the display | `{}` |\n| `--paper-autocomplete-background-color` | Background color of suggestions | `{}` |",
       "summary": "",
-      "path": "paper-autocomplete.html",
+      "path": "paper-autocomplete.js",
       "properties": [
         {
           "name": "source",
@@ -13,12 +13,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 175,
-              "column": 8
+              "line": 178,
+              "column": 6
             },
             "end": {
-              "line": 177,
-              "column": 9
+              "line": 180,
+              "column": 7
             }
           },
           "metadata": {
@@ -34,12 +34,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 181,
-              "column": 8
+              "line": 184,
+              "column": 6
             },
             "end": {
-              "line": 184,
-              "column": 9
+              "line": 187,
+              "column": 7
             }
           },
           "metadata": {
@@ -56,12 +56,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 188,
-              "column": 8
+              "line": 191,
+              "column": 6
             },
             "end": {
-              "line": 192,
-              "column": 9
+              "line": 195,
+              "column": 7
             }
           },
           "metadata": {
@@ -79,12 +79,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 197,
-              "column": 8
+              "line": 200,
+              "column": 6
             },
             "end": {
-              "line": 197,
-              "column": 27
+              "line": 200,
+              "column": 25
             }
           },
           "metadata": {
@@ -100,12 +100,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 202,
-              "column": 8
+              "line": 205,
+              "column": 6
             },
             "end": {
-              "line": 205,
-              "column": 9
+              "line": 208,
+              "column": 7
             }
           },
           "metadata": {
@@ -122,12 +122,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 207,
-              "column": 8
+              "line": 210,
+              "column": 6
             },
             "end": {
-              "line": 209,
-              "column": 9
+              "line": 212,
+              "column": 7
             }
           },
           "metadata": {
@@ -143,12 +143,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 211,
-              "column": 8
+              "line": 214,
+              "column": 6
             },
             "end": {
-              "line": 213,
-              "column": 9
+              "line": 216,
+              "column": 7
             }
           },
           "metadata": {
@@ -164,12 +164,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 217,
-              "column": 8
+              "line": 220,
+              "column": 6
             },
             "end": {
-              "line": 222,
-              "column": 9
+              "line": 225,
+              "column": 7
             }
           },
           "metadata": {
@@ -188,12 +188,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 228,
-              "column": 8
+              "line": 231,
+              "column": 6
             },
             "end": {
-              "line": 231,
-              "column": 9
+              "line": 234,
+              "column": 7
             }
           },
           "metadata": {
@@ -210,12 +210,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 233,
-              "column": 8
+              "line": 236,
+              "column": 6
             },
             "end": {
-              "line": 236,
-              "column": 9
+              "line": 239,
+              "column": 7
             }
           },
           "metadata": {
@@ -232,12 +232,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 238,
-              "column": 8
+              "line": 241,
+              "column": 6
             },
             "end": {
-              "line": 238,
-              "column": 27
+              "line": 241,
+              "column": 25
             }
           },
           "metadata": {
@@ -253,12 +253,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 241,
-              "column": 8
+              "line": 244,
+              "column": 6
             },
             "end": {
-              "line": 244,
-              "column": 9
+              "line": 247,
+              "column": 7
             }
           },
           "metadata": {
@@ -275,12 +275,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 247,
-              "column": 8
+              "line": 250,
+              "column": 6
             },
             "end": {
-              "line": 247,
-              "column": 31
+              "line": 250,
+              "column": 29
             }
           },
           "metadata": {
@@ -296,12 +296,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 249,
-              "column": 8
+              "line": 252,
+              "column": 6
             },
             "end": {
-              "line": 254,
-              "column": 9
+              "line": 257,
+              "column": 7
             }
           },
           "metadata": {
@@ -318,12 +318,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 275,
-              "column": 4
+              "line": 278,
+              "column": 2
             },
             "end": {
-              "line": 278,
-              "column": 5
+              "line": 281,
+              "column": 3
             }
           },
           "metadata": {},
@@ -338,12 +338,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 280,
-              "column": 4
+              "line": 283,
+              "column": 2
             },
             "end": {
-              "line": 283,
-              "column": 5
+              "line": 286,
+              "column": 3
             }
           },
           "metadata": {},
@@ -358,12 +358,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 285,
-              "column": 4
+              "line": 288,
+              "column": 2
             },
             "end": {
-              "line": 295,
-              "column": 5
+              "line": 298,
+              "column": 3
             }
           },
           "metadata": {},
@@ -378,12 +378,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 303,
-              "column": 4
+              "line": 306,
+              "column": 2
             },
             "end": {
-              "line": 325,
-              "column": 5
+              "line": 328,
+              "column": 3
             }
           },
           "metadata": {},
@@ -409,12 +409,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 330,
-              "column": 4
+              "line": 333,
+              "column": 2
             },
             "end": {
-              "line": 353,
-              "column": 5
+              "line": 356,
+              "column": 3
             }
           },
           "metadata": {},
@@ -429,12 +429,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 359,
-              "column": 4
+              "line": 362,
+              "column": 2
             },
             "end": {
-              "line": 367,
-              "column": 5
+              "line": 370,
+              "column": 3
             }
           },
           "metadata": {},
@@ -455,12 +455,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 371,
-              "column": 4
+              "line": 374,
+              "column": 2
             },
             "end": {
-              "line": 419,
-              "column": 5
+              "line": 422,
+              "column": 3
             }
           },
           "metadata": {},
@@ -475,12 +475,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 421,
-              "column": 4
+              "line": 424,
+              "column": 2
             },
             "end": {
-              "line": 423,
-              "column": 5
+              "line": 426,
+              "column": 3
             }
           },
           "metadata": {},
@@ -496,12 +496,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 427,
-              "column": 4
+              "line": 430,
+              "column": 2
             },
             "end": {
-              "line": 436,
-              "column": 5
+              "line": 439,
+              "column": 3
             }
           },
           "metadata": {},
@@ -516,12 +516,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 440,
-              "column": 4
+              "line": 443,
+              "column": 2
             },
             "end": {
-              "line": 449,
-              "column": 5
+              "line": 452,
+              "column": 3
             }
           },
           "metadata": {},
@@ -536,12 +536,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 453,
-              "column": 4
+              "line": 456,
+              "column": 2
             },
             "end": {
-              "line": 464,
-              "column": 5
+              "line": 467,
+              "column": 3
             }
           },
           "metadata": {},
@@ -556,12 +556,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 470,
-              "column": 4
+              "line": 473,
+              "column": 2
             },
             "end": {
-              "line": 482,
-              "column": 5
+              "line": 485,
+              "column": 3
             }
           },
           "metadata": {},
@@ -582,12 +582,12 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 493,
-              "column": 4
+              "line": 496,
+              "column": 2
             },
             "end": {
-              "line": 521,
-              "column": 5
+              "line": 524,
+              "column": 3
             }
           },
           "metadata": {},
@@ -608,12 +608,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 529,
-              "column": 4
+              "line": 532,
+              "column": 2
             },
             "end": {
-              "line": 531,
-              "column": 5
+              "line": 534,
+              "column": 3
             }
           },
           "metadata": {},
@@ -638,12 +638,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 536,
-              "column": 4
+              "line": 539,
+              "column": 2
             },
             "end": {
-              "line": 545,
-              "column": 5
+              "line": 548,
+              "column": 3
             }
           },
           "metadata": {},
@@ -658,12 +658,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 553,
-              "column": 4
+              "line": 556,
+              "column": 2
             },
             "end": {
-              "line": 559,
-              "column": 5
+              "line": 562,
+              "column": 3
             }
           },
           "metadata": {},
@@ -683,12 +683,12 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 564,
-              "column": 4
+              "line": 567,
+              "column": 2
             },
             "end": {
-              "line": 569,
-              "column": 5
+              "line": 572,
+              "column": 3
             }
           },
           "metadata": {},
@@ -708,12 +708,12 @@
       "metadata": {},
       "sourceRange": {
         "start": {
-          "line": 156,
-          "column": 2
+          "line": 123,
+          "column": 0
         },
         "end": {
-          "line": 570,
-          "column": 3
+          "line": 573,
+          "column": 1
         }
       },
       "privacy": "public",
@@ -725,12 +725,12 @@
           "description": "List of suggestions to display.\nIf the array items are strings they will be used for display a suggestions and\nto insert a value.\nIf the list is an object the each object must contain `value` and `display`\nproperties.\nThe `display` property will be used in the suggestions list and the\n`value` property will be used to insert the value to the referenced text field.",
           "sourceRange": {
             "start": {
-              "line": 175,
-              "column": 8
+              "line": 178,
+              "column": 6
             },
             "end": {
-              "line": 177,
-              "column": 9
+              "line": 180,
+              "column": 7
             }
           },
           "metadata": {},
@@ -741,12 +741,12 @@
           "description": "`value` Selected object from the suggestions",
           "sourceRange": {
             "start": {
-              "line": 181,
-              "column": 8
+              "line": 184,
+              "column": 6
             },
             "end": {
-              "line": 184,
-              "column": 9
+              "line": 187,
+              "column": 7
             }
           },
           "metadata": {},
@@ -757,12 +757,12 @@
           "description": "List of suggestion that are displayed.",
           "sourceRange": {
             "start": {
-              "line": 188,
-              "column": 8
+              "line": 191,
+              "column": 6
             },
             "end": {
-              "line": 192,
-              "column": 9
+              "line": 195,
+              "column": 7
             }
           },
           "metadata": {},
@@ -773,12 +773,12 @@
           "description": "A target input field to observe.",
           "sourceRange": {
             "start": {
-              "line": 197,
-              "column": 8
+              "line": 200,
+              "column": 6
             },
             "end": {
-              "line": 197,
-              "column": 27
+              "line": 200,
+              "column": 25
             }
           },
           "metadata": {},
@@ -789,12 +789,12 @@
           "description": "Currently selected item on a suggestions list.",
           "sourceRange": {
             "start": {
-              "line": 202,
-              "column": 8
+              "line": 205,
+              "column": 6
             },
             "end": {
-              "line": 205,
-              "column": 9
+              "line": 208,
+              "column": 7
             }
           },
           "metadata": {},
@@ -805,12 +805,12 @@
           "description": "Scroll target element",
           "sourceRange": {
             "start": {
-              "line": 207,
-              "column": 8
+              "line": 210,
+              "column": 6
             },
             "end": {
-              "line": 209,
-              "column": 9
+              "line": 212,
+              "column": 7
             }
           },
           "metadata": {},
@@ -821,12 +821,12 @@
           "description": "Sizing target element.",
           "sourceRange": {
             "start": {
-              "line": 211,
-              "column": 8
+              "line": 214,
+              "column": 6
             },
             "end": {
-              "line": 213,
-              "column": 9
+              "line": 216,
+              "column": 7
             }
           },
           "metadata": {},
@@ -837,12 +837,12 @@
           "description": "True when user query changed and waiting for `source` property update",
           "sourceRange": {
             "start": {
-              "line": 217,
-              "column": 8
+              "line": 220,
+              "column": 6
             },
             "end": {
-              "line": 222,
-              "column": 9
+              "line": 225,
+              "column": 7
             }
           },
           "metadata": {},
@@ -853,12 +853,12 @@
           "description": "Set this to true if you use async operation in response for query event.\nThis will display a loader when querying for more suggestions.\nDo not use it it you do not handle suggestions asynchronously.",
           "sourceRange": {
             "start": {
-              "line": 228,
-              "column": 8
+              "line": 231,
+              "column": 6
             },
             "end": {
-              "line": 231,
-              "column": 9
+              "line": 234,
+              "column": 7
             }
           },
           "metadata": {},
@@ -869,12 +869,12 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 238,
-              "column": 8
+              "line": 241,
+              "column": 6
             },
             "end": {
-              "line": 238,
-              "column": 27
+              "line": 241,
+              "column": 25
             }
           },
           "metadata": {},
@@ -885,12 +885,12 @@
           "description": "If true it will opend suggestions on input field focus.",
           "sourceRange": {
             "start": {
-              "line": 241,
-              "column": 8
+              "line": 244,
+              "column": 6
             },
             "end": {
-              "line": 244,
-              "column": 9
+              "line": 247,
+              "column": 7
             }
           },
           "metadata": {},
@@ -916,11 +916,7 @@
         "selectors": []
       },
       "slots": [],
-      "tagname": "paper-autocomplete",
-      "mixins": [
-        "Polymer.IronOverlayBehavior",
-        "Polymer.IronScrollTargetBehavior"
-      ]
+      "tagname": "paper-autocomplete"
     }
   ]
 }
