@@ -13,18 +13,18 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 */
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
-import {IronOverlayBehavior} from '@polymer/iron-overlay-behavior/iron-overlay-behavior.js';
-import {IronScrollTargetBehavior} from '@polymer/iron-scroll-target-behavior/iron-scroll-target-behavior.js';
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
-import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
-import '@polymer/paper-item/paper-item.js';
-import '@polymer/paper-ripple/paper-ripple.js';
-import '@polymer/paper-styles/shadow.js';
-import '@polymer/iron-selector/iron-selector.js';
-import '@polymer/iron-a11y-keys/iron-a11y-keys.js';
-import '@polymer/paper-progress/paper-progress.js';
+import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
+import {afterNextRender} from '../../@polymer/polymer/lib/utils/render-status.js';
+import {IronOverlayBehavior} from '../../@polymer/iron-overlay-behavior/iron-overlay-behavior.js';
+import {IronScrollTargetBehavior} from '../../@polymer/iron-scroll-target-behavior/iron-scroll-target-behavior.js';
+import {html} from '../../@polymer/polymer/lib/utils/html-tag.js';
+import {mixinBehaviors} from '../../@polymer/polymer/lib/legacy/class.js';
+import '../../@polymer/paper-item/paper-item.js';
+import '../../@polymer/paper-ripple/paper-ripple.js';
+import '../../@polymer/paper-styles/shadow.js';
+import '../../@polymer/iron-selector/iron-selector.js';
+import '../../@polymer/iron-a11y-keys/iron-a11y-keys.js';
+import '../../@polymer/paper-progress/paper-progress.js';
 /**
  * # `<paper-autocomplete>`
  *
