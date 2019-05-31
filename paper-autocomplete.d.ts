@@ -5,23 +5,14 @@
  *   https://github.com/Polymer/tools/tree/master/packages/gen-typescript-declarations
  *
  * To modify these typings, edit the source file(s):
- *   paper-autocomplete.html
+ *   paper-autocomplete.js
  */
 
 
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-/// <reference path="../polymer/types/polymer-element.d.ts" />
-/// <reference path="../polymer/types/lib/utils/render-status.d.ts" />
-/// <reference path="../paper-item/paper-item.d.ts" />
-/// <reference path="../paper-ripple/paper-ripple.d.ts" />
-/// <reference path="../paper-styles/shadow.d.ts" />
-/// <reference path="../iron-overlay-behavior/iron-overlay-behavior.d.ts" />
-/// <reference path="../iron-selector/iron-selector.d.ts" />
-/// <reference path="../iron-a11y-keys/iron-a11y-keys.d.ts" />
-/// <reference path="../iron-scroll-target-behavior/iron-scroll-target-behavior.d.ts" />
-/// <reference path="../paper-progress/paper-progress.d.ts" />
+export {PaperAutocomplete};
 
 declare namespace UiElements {
 
@@ -114,10 +105,7 @@ declare namespace UiElements {
    * | `--paper-autocomplete` | Mixin applied to the display | `{}` |
    * | `--paper-autocomplete-background-color` | Background color of suggestions | `{}` |
    */
-  class PaperAutocomplete extends
-    Polymer.IronOverlayBehavior(
-    Polymer.IronScrollTargetBehavior(
-    Object)) {
+  class PaperAutocomplete {
 
     /**
      * List of suggestions to display.
@@ -284,6 +272,9 @@ declare namespace UiElements {
   }
 }
 
-interface HTMLElementTagNameMap {
-  "paper-autocomplete": UiElements.PaperAutocomplete;
+declare global {
+
+  interface HTMLElementTagNameMap {
+    "paper-autocomplete": UiElements.PaperAutocomplete;
+  }
 }
