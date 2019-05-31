@@ -136,6 +136,7 @@ class PaperAutocomplete extends
 
     .dropdown-container {
       overflow: auto;
+      box-shaddow: --box-shadow-4dp;
       @apply --shadow-elevation-4dp;
       background-color: var(--paper-autocomplete-background-color, #fff);
     }
