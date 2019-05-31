@@ -121,7 +121,7 @@ import '../../@polymer/paper-progress/paper-progress.js';
  * @polymer
  * @demo demo/index.html
  */
-class PaperAutocomplete extends
+export class PaperAutocomplete extends
   mixinBehaviors(
     [IronOverlayBehavior, IronScrollTargetBehavior], PolymerElement) {
   static get template() {

@@ -12,17 +12,7 @@
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-
-import {afterNextRender} from '@polymer/polymer/lib/utils/render-status.js';
-
-import {IronOverlayBehavior} from '@polymer/iron-overlay-behavior/iron-overlay-behavior.js';
-
-import {IronScrollTargetBehavior} from '@polymer/iron-scroll-target-behavior/iron-scroll-target-behavior.js';
-
-import {html} from '@polymer/polymer/lib/utils/html-tag.js';
-
-import {mixinBehaviors} from '@polymer/polymer/lib/legacy/class.js';
+export {PaperAutocomplete};
 
 declare namespace UiElements {
 
