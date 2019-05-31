@@ -337,6 +337,9 @@ class PaperAutocomplete extends
       return;
     }
     const value = this._oldTarget.value;
+    if (typeof value !== 'string') {
+      return;
+    }
     if (this._previousQuery) {
       if (value.indexOf(this._previousQuery) === 0) {
         this._previousQuery = value;

@@ -243,6 +243,16 @@
       assert.isFalse(spy.called);
     });
 
+    test('Ignores non string inputs', () => {
+      element._oldTarget = {
+        value: 2,
+        removeEventListener: () => {}
+      };
+      const spy = sinon.spy(element, '_filterSuggestions');
+      element._valueChanged();
+      assert.isFalse(spy.called);
+    });
+
     test('Calls _disaptchQuery() when no previous query', () => {
       const input = wrapInput(element);
       input.value = 'test';
