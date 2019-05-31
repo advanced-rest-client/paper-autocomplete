@@ -148,3 +148,30 @@
 
 
 
+# [3.0.0](https://github.com/advanced-rest-client/paper-autocomplete/compare/2.0.2...3.0.0) (2019-05-31)
+
+
+### Breaking
+
+* Bumping version ([498b1d3a6d91e4149ca68c71ab1c74103526235f](https://github.com/advanced-rest-client/paper-autocomplete/commit/498b1d3a6d91e4149ca68c71ab1c74103526235f))
+* Upgrading to Polymer 3 ([006caf8442592b9f93f0821d6a659f684ca9a1b8](https://github.com/advanced-rest-client/paper-autocomplete/commit/006caf8442592b9f93f0821d6a659f684ca9a1b8))
+
+### Docs
+
+* Updating Polymer docs and typpings ([72d210509af2c8804e383cf12f92ae95287fc873](https://github.com/advanced-rest-client/paper-autocomplete/commit/72d210509af2c8804e383cf12f92ae95287fc873))
+* Updating readme ([058c39035f79cfbe68817c28642f293f27417f98](https://github.com/advanced-rest-client/paper-autocomplete/commit/058c39035f79cfbe68817c28642f293f27417f98))
+
+### Fix
+
+* Fixes #1 - non string inputs causes error ([2c16ad0b091dece6657f30574ffae850b5ae1b2f](https://github.com/advanced-rest-client/paper-autocomplete/commit/2c16ad0b091dece6657f30574ffae850b5ae1b2f)), closes [#1](https://github.com/advanced-rest-client/paper-autocomplete/issues/1)
+
+### Update
+
+* Adding box-shaddow style to the element ([a8254afc6a807c3a8e23b26901bbd917ed583daf](https://github.com/advanced-rest-client/paper-autocomplete/commit/a8254afc6a807c3a8e23b26901bbd917ed583daf))
+* Disabling test coverage to test configuration ([6ba739c259dd49c180cbc79dc3bdf1667a7cc8bc](https://github.com/advanced-rest-client/paper-autocomplete/commit/6ba739c259dd49c180cbc79dc3bdf1667a7cc8bc))
+* Updating import paths to match standards ([78d33c4c594cd9998c6b703639519af1973e33e1](https://github.com/advanced-rest-client/paper-autocomplete/commit/78d33c4c594cd9998c6b703639519af1973e33e1))
+* Updating tests configuration ([0281e6c32453732a835826ab7089dc4429b39b3a](https://github.com/advanced-rest-client/paper-autocomplete/commit/0281e6c32453732a835826ab7089dc4429b39b3a))
+* Upgrading dependencies ([2c53a34abb52e840a823d4cd131cbe6c1c589d98](https://github.com/advanced-rest-client/paper-autocomplete/commit/2c53a34abb52e840a823d4cd131cbe6c1c589d98))
+
+
+
