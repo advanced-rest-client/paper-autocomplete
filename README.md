@@ -48,7 +48,7 @@ or defined in an attribute:
     <input id="asyncField">
   </iron-input>
 </paper-input-container>
-<paper-autocomplete loader id="fruitAsync" on-query="_asyncSuggestions"></paper-autocomplete>
+<paper-autocomplete loader id="fruitAsync"></paper-autocomplete>
 ```
 
 ```javascript
@@ -62,6 +62,99 @@ ac.addEventListener('query', (e) => {
   });
 });
 ```
+
+## New in 3.1.0
+
+-   Replaced Polymer with LitElement
+-   Upgraded testing framework and tests
+-   All changes are backward compatible
+-   Breaking: removing `value` property. It wasn't ever set and used
+-   New: Adding `selected` property that represent selected item from `source` array
+-   New: Adding `noink` proeprty to disable ripple effect when clicking on a list item
+-   New: Added support for ARIA and role attributes
+-   New: Added `onquery` and `onselected` setters and getters
+-   Deprecated `open-on-focus` attribute, use `openonfocus` instead
+-   Deprecated `selected-item` attribute, use `selecteditem` instead
+
+
+## Rendering the suggestions
+
+Suggestions array can be either an array of strings or objects.
+For strings, displayed in the list and inserted to the input field value is the same item.
+
+You can set different list item display value and value inserted into the field when the array contains
+object. Each object must contain `value` and `display` properties where `value` property
+will be inserted into the text field and `display` will be used to display description inside the list.
+
+```javascript
+// Simple suggestions
+autocomplete.source = ['Apple', 'Orange', 'Bananas'];
+
+// Complex suggestions
+autocomplete.source = [
+  { id: 1, value: 'Apple' },
+  { id: 2, value: 'Bananas' },
+  { id: 3, value: 'Orange' }
+];
+```
+
+Note, the `selected` event always contains the string value of the selection.
+You can read selected item as the original type from `selected` property of the autocomplete
+
+```javascript
+autocomplete.onselected = (e) {
+  const label = e.detail.value;
+  // contains suggestion value
+  const item = e.target.selected;
+  // contains an item from `source`, e.g. `{ id: 1, value: 'Apple' }`
+};
+```
+
+## Query event
+
+The `query` event is fired when the user query change in the way so the element is
+not able to render suggestions properly.
+This means if the user add a letter to previously entered value the query event will not
+fire since it already have list of suggestion that should be used to filter suggestions from.
+And again when the user will delete a letter the element will still have list of
+source suggestions to filter suggestions from.
+However, if the user change the query entirely it will fire `query` event
+and the app will expect to `source` to change. Setting source is not mandatory.
+
+## Preventing from changing the input value
+
+To prevent the element to update the value of the target input, listent for
+`selected` event and cancel it by calling `event.preventDefault()` function.
+
+## Setting target property
+
+To set an input target simply use `target` property. It accept any element.
+
+In templating system or in an HTML page you may want to use an is of another element to be used as a target. You can set the target as other element's id
+but only if the referenced element is a descendant of autocomplete's parent element.
+
+```html
+<div class="parent">
+  <div class="search-bar">
+    <label for="search">Search</label>
+    <input type="search" id="search"/>
+    <button>Search</button>
+  </div>
+  <paper-autocomplete target="search"></paper-autocomplete>
+</div>
+```
+
+In all other cases pass a reference to a `HTMLElement` element to the `target` property.
+
+## a11y
+
+The element alters the following properties on the `target` element:
+
+-   `aria-autocomplete="list"`
+-   `autocomplete="off"`
+-   `aria-haspopup="true"`
+-   `aria-controls` is set to autocomplete's `id` value. If `id` is not set then it's auto generated.
+
 
 ## API components
 
@@ -80,7 +173,7 @@ npm install --save @advanced-rest-client/paper-autocomplete
 <html>
   <head>
     <script type="module">
-      import './node_modules/@advanced-rest-client/paper-autocomplete/paper-autocomplete.js';
+      import '@advanced-rest-client/paper-autocomplete/paper-autocomplete.js';
     </script>
   </head>
   <body>
@@ -92,8 +185,8 @@ npm install --save @advanced-rest-client/paper-autocomplete
 ### In a Polymer 3 element
 
 ```js
-import {PolymerElement, html} from './node_modules/@polymer/polymer/polymer-element.js';
-import './node_modules/@advanced-rest-client/paper-autocomplete/paper-autocomplete.js';
+import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
+import '@advanced-rest-client/paper-autocomplete/paper-autocomplete.js';
 
 class SampleElement extends PolymerElement {
   static get template() {
@@ -109,45 +202,17 @@ customElements.define('sample-element', SampleElement);
 
 ```sh
 git clone https://github.com/advanced-rest-client/paper-autocomplete
-cd api-url-editor
+cd paper-autocomplete
 npm install
-npm install -g polymer-cli
 ```
 
 ### Running the demo locally
 
 ```sh
-polymer serve --npm
-open http://127.0.0.1:<port>/demo/
+npm start
 ```
 
 ### Running the tests
 ```sh
-polymer test --npm
+npm test
 ```
-
-
-## Rendering the suggestions
-
-Suggestions array can be either an array of strings or objects.
-For strings, displayed in the list and inserted to the input field value is the same item.
-
-You can set different list item display value and value inserted into the field when the array contains
-onject. Each object must contain `value` and `display` properties where `value` property
-will be inserted into the text field and `display` will be used to display description inside the list.
-
-## Query event
-
-The `query` event is fired when the user query change in the way so the element is
-not able to render suggestions properly.
-This means if the user add a letter to previously entered value the query event will not
-fire since it already have list of suggestion that should be used to filter suggestions from.
-And again when the user will delete a letter the element will still have list of
-source suggestions to filter suggestions from.
-However, if the user change the query entirely it will fire `query` event
-and the app will expect to `source` to change. Setting source is not mandatory.
-
-## Preventing from changing the input value
-
-To prevent the element to update the value of the target input, listent for
-`selected` event and cancel it by calling `event.preventDefault()` function.

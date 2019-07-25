@@ -6,8 +6,13 @@
   <title>Paper Autocomplete Demo</title>
 
   <style>
-  .form .form-row paper-autocomplete {
-    top: 32px;
+  .form-row paper-input {
+    flex: 1;
+  }
+
+  .form-row {
+    display: flex;
+    flex-direction: row;
   }
 
   .relative {
@@ -65,24 +70,19 @@
     <p>Autocomplete can be positioned</p>
     <div class="relative">
       <paper-input label="Enter fruit name" id="positionedField"></paper-input>
-      <paper-autocomplete id="fruitsPositioned" openonfocus  dynamicalign verticalalign="top"
+      <paper-autocomplete id="fruitsPositioned" openonfocus dynamicalign verticalalign="top"
         horizontalalign="left" verticaloffset="56"></paper-autocomplete>
     </div>
   </div>
 
+  <div class="vertical-section vertical-section-container centered relative">
+    <p>Accepts sibling's ID as a target</p>
+    <div class="relative">
+      <paper-input label="Enter fruit name" id="siblingField"></paper-input>
+      <paper-autocomplete id="fruitsSibling" target="siblingField" openonfocus dynamicalign></paper-autocomplete>
+    </div>
+  </div>
+
   <script type="module" src="./index.js"></script>
-
-  <script type="module">
-
-  //   demo.inputFocus = function(e) {
-  //     const index = this.$.list.indexForElement(e.target);
-  //     const elm = document.querySelector('.form-row:nth-child(' + (index + 1) + ') paper-autocomplete');
-  //     if (!elm) {
-  //       return;
-  //     }
-  //     elm.target = e.target;
-  //   };
-  // })(document.querySelector('#demo'));
-  </script>
 </body>
 </html>

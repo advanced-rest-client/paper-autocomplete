@@ -25,97 +25,10 @@ import '@polymer/paper-progress/paper-progress.js';
 /**
  * # `<paper-autocomplete>`
  *
- * Use `paper-autocomplete` to add autocomplete functionality to the input elements.
- * It also works wilt polymer inputs.
- *
- * The element works with static list of suggestions or with dynamic (asynchronous)
- * operation that require calling te backend or local datastore.
- * In second case you should set `loader` property which will display a loader animation
- * while results are loaded.
- *
- * You must associate suggestions with the input field. This can be done by passing
- * an element reference to the `target` property.
- *
- * ## Example:
- *
- * ### Static suggestions
- *
- * ```html
- * <paper-input label="Enter fruit name" id="fruits"></paper-input>
- * <paper-autocomplete
- *  id="fruitsSuggestions"
- *  target="[[fruits]]"
- *  on-selected="_fruitSelected"></paper-input-autocomplete>
- *
- * <script>
- * document.querySelector('#fruitsSuggestions').source = ['Apple', 'Orange', 'Bananas'];
- * < /script>
- * ```
- *
- * ### Dynamic suggestions
- *
- * ```html
- * <paper-input-container>
- *  <label>Enter friut name</label>
- *  <input is="iron-input" type="text" value="{{async::input}}" id="asyncField" />
- * </paper-input-container>
- * <paper-autocomplete loader id="fruitAsync" on-query="_asyncSuggestions"></paper-input-autocomplete>
- *
- * <script>
- *  document.querySelector('#fruitAsync').target = document.querySelector('#asyncField');
- *  document.querySelector('#fruitAsync').addEventListener('query', (e) => {
- *    const query = e.detail.value;
- *    asyncQuery(query, (suggestions) => {
- *      document.querySelector('#fruitAsync').source = suggestions;
- *    });
- *  });
- * < /script>
- * ```
- *
- * ## Displaying the suggestions
- *
- * Suggestions array can be either an array of strings or objects.
- * For strings, displayed in the list and inserted to the input field value is the same item.
- *
- * You can set different list item display value and value inserted into the field when the array contains
- * onject. Each object must contain `value` and `display` properties where `value` property
- * will be inserted into the text field and `display` will be used to display description inside the list.
- *
- * ## Query event
- *
- * The `query` event is fired when the user query change in the way so the element is
- * not able to display suggestions properly.
- * This means if the user add a letter to previously entered value the query event will not
- * fire since it already have list of suggestion that should be used to filter suggestions from.
- * And again when the user will delete a letter the element will still have list of
- * source suggestions to filter suggestions from.
- * However, if the user change the query entirely it will fire `query` event
- * and the app will expect to `source` to change. Setting source is not mandatory.
- *
- * ## Preventing from changing the input value
- *
- * To prevent the element to update the value of the target input, listent for
- * `selected` event and cancel it by calling `event.preventDefault()` function.
- *
- * ## Styling
- *
- * Suggestions are positioned absolutely! You must include relative positioned parent to contain the suggestion
- * display in the same area.
- * Use CSS properties to position the display in the left bottom corner of the input field.
- *
- * `<paper-autocomplete>` provides the following custom properties and mixins
- * for styling:
- *
- * | Custom property | Description | Default |
- * ----------------|-------------|----------
- * | `--paper-autocomplete` | Mixin applied to the display | `{}` |
- * | `--paper-autocomplete-background-color` | Background color of suggestions | `{}` |
- *
  * @customElement
  * @memberof UiElements
- * @polymerBehavior IronOverlayBehavior
- * @polymerBehavior IronScrollTargetBehavior
- * @polymer
+ * @appliesMixin ArcOverlayMixin
+ * @appliesMixin ArcScrollTargetMixin
  * @demo demo/index.html
  */
 export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitElement)) {
@@ -136,37 +49,47 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
   }
 
   render() {
-    const { loader, _loading, selectedItem } = this;
-    let { _suggestions, noink, target } = this;
+    const { loader, loading, selectedItem, _oldTarget } = this;
+    let { _suggestions, noink } = this;
     if (!_suggestions) {
       _suggestions = [];
     }
     if (noink === undefined) {
       noink = false;
     }
-    if (typeof target === 'string') {
-      target = undefined;
-    }
-    const _showLoader = !!loader && !!_loading;
+    const _showLoader = !!loader && !!loading;
     return html`<div class="dropdown-container">
     ${_showLoader ? html`<paper-progress indeterminate></paper-progress>` : undefined}
       <iron-selector .selected="${selectedItem}" @selected-changed="${this._selectedHandler}">
-      ${_suggestions.map((item) => html`<paper-item>
+      ${_suggestions.map((item) => html`<paper-item aria-selected="false" tabindex="-1">
         <div>${item.value || item}</div>
         <paper-ripple ?noink="${noink}"></paper-ripple>
       </paper-item>`)}
       </iron-selector>
     </div>
-    <iron-a11y-keys .target="${target}" keys="up" @keys-pressed="${this.selectPrevious}"></iron-a11y-keys>
-    <iron-a11y-keys .target="${target}" keys="down" @keys-pressed="${this.selectNext}"></iron-a11y-keys>
-    <iron-a11y-keys .target="${target}" keys="enter" @keys-pressed="${this.acceptSelection}"></iron-a11y-keys>
-    <iron-a11y-keys .target="${this}" keys="up" @keys-pressed="${this.selectPrevious}"></iron-a11y-keys>
-    <iron-a11y-keys .target="${this}" keys="down" @keys-pressed="${this.selectNext}"></iron-a11y-keys>
-    <iron-a11y-keys .target="${this}" keys="enter" @keys-pressed="${this.acceptSelection}"></iron-a11y-keys>`;
+    <iron-a11y-keys aria-hidden="true"
+      .target="${_oldTarget}" keys="up" @keys-pressed="${this.selectPrevious}"></iron-a11y-keys>
+    <iron-a11y-keys aria-hidden="true"
+      .target="${_oldTarget}" keys="down" @keys-pressed="${this.selectNext}"></iron-a11y-keys>
+    <iron-a11y-keys aria-hidden="true"
+      .target="${_oldTarget}" keys="enter" @keys-pressed="${this.acceptSelection}"></iron-a11y-keys>
+    <iron-a11y-keys aria-hidden="true"
+      .target="${this}" keys="up" @keys-pressed="${this.selectPrevious}"></iron-a11y-keys>
+    <iron-a11y-keys aria-hidden="true"
+      .target="${this}" keys="down" @keys-pressed="${this.selectNext}"></iron-a11y-keys>
+    <iron-a11y-keys aria-hidden="true"
+      .target="${this}" keys="enter" @keys-pressed="${this.acceptSelection}"></iron-a11y-keys>`;
   }
 
   static get properties() {
     return {
+      /**
+       * A target input field to observe.
+       * It accepts an element which is the input with `value` property or
+       * an id of an element that is a child of the parent element of this node.
+       * @type {HTMLElement|String}
+       */
+      target: { },
       /**
        * List of suggestions to display.
        * If the array items are strings they will be used for display a suggestions and
@@ -180,33 +103,23 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
        */
       source: { type: Array },
       /**
-       * `value` Selected object from the suggestions
+       * Selected object from the suggestions list.
        */
-      value: { type: Object },
-      /**
-       * List of suggestion that are rendered.
-       */
-      _suggestions: { type: Array },
-      /**
-       * A target input field to observe.
-       * @type {HTMLElement}
-       */
-      target: { type: Object },
+      selected: { type: Object },
       /**
        * Currently selected item on a suggestions list.
        * @type {Number}
        */
       selectedItem: { type: Number },
       /**
-       * Scroll target element
-       * @type {HTMLElement}
+       * List of suggestion that are rendered.
        */
-      scrollTarget: { type: Object },
+      _suggestions: { type: Array },
       /**
-       * Sizing target element.
-       * @type {HTMLElement}
+       * Scroll target element
+       * @type {HTMLElement|String}
        */
-      sizingTarget: { type: Object },
+      scrollTarget: { },
       /**
        * True when user query changed and waiting for `source` property update
        */
@@ -224,6 +137,10 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
        */
       openOnFocus: { type: Boolean },
       /**
+       * When set it disables ripple effect when clicking on a suggestion.
+       */
+      noink: { type: Boolean },
+      /**
        * this property is set when the `target` changes. It is used to remove
        * listeners.
        * @type {HTMLElement}
@@ -231,27 +148,8 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
       _oldTarget: { type: Object },
       // Compatibility with polymer attributes
       _oldOpenOnFocus: { type: Boolean, attribute: 'open-on-focus' },
-      _oldSizingTarget: { type: Boolean, attribute: 'sizing-target' },
-      _oldScrollTarget: { type: Boolean, attribute: 'scroll-target' },
       _oldSelectedItem: { type: Boolean, attribute: 'selected-item' }
     };
-  }
-
-  get value() {
-    return this._value;
-  }
-
-  set value(value) {
-    const old = this._value;
-    if (old === value) {
-      return;
-    }
-    this._value = value;
-    this.dispatchEvent(new CustomEvent('value-chanegd', {
-      detail: {
-        value
-      }
-    }));
   }
   /**
    * @return {Array<String>|Array<Object>} List of suggestion that are rendered.
@@ -290,22 +188,6 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
 
   set _oldOpenOnFocus(value) {
     this.openOnFocus = value;
-  }
-
-  get _oldSizingTarget() {
-    return this.sizingTarget;
-  }
-
-  set _oldSizingTarget(value) {
-    this.sizingTarget = value;
-  }
-
-  get _oldScrollTarget() {
-    return this.scrollTarget;
-  }
-
-  set _oldScrollTarget(value) {
-    this.scrollTarget = value;
   }
 
   get _oldSelectedItem() {
@@ -373,7 +255,7 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
    * @return {Function} Previously registered handler for `query` event
    */
   get onquery() {
-    return this._onquery || null;
+    return this._onquery;
   }
   /**
    * Registers a callback function for `query` event
@@ -387,7 +269,7 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
    * @return {Function} Previously registered handler for `selected` event
    */
   get onselected() {
-    return this._onselected || null;
+    return this._onselected;
   }
   /**
    * Registers a callback function for `selected` event
@@ -422,6 +304,14 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
       super.connectedCallback();
     }
     this.addEventListener('click', this.acceptSelection);
+    if (!this.hasAttribute('role')) {
+      this.setAttribute('role', 'listbox');
+    }
+    if (!this.hasAttribute('aria-label')) {
+      let text = 'Use up and down arrows to select one of the suggestions ';
+      text += 'and use enter to insert value into the text box.';
+      this.setAttribute('aria-label', text);
+    }
   }
 
   disconnectedCallback() {
@@ -436,7 +326,11 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
     this.scrollTarget = target;
     this.sizingTarget = target;
   }
-
+  /**
+   * Registers an event handler for given type
+   * @param {String} eventType Event type (name)
+   * @param {Function} value The handler to register
+   */
   _registerCallback(eventType, value) {
     const key = `_on${eventType}`;
     if (this[key]) {
@@ -469,7 +363,7 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
       if (!parent || !parent.querySelector) {
         return;
       }
-      const node = parent.querySelector(target);
+      const node = parent.querySelector(`#${target}`);
       if (node) {
         this.target = node;
         return;
@@ -477,11 +371,34 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
     } else if (target) {
       target.addEventListener('input', this._valueChanged);
       target.addEventListener('focus', this._targetFocus);
+      this._setupTargetAria(target);
       this._oldTarget = target;
       if (target === document.activeElement) {
         this._targetFocus();
       }
     }
+  }
+  /**
+   * Generates an id on passed element.
+   * @param {HTMLElement} target An element to set id on to
+   */
+  _ensureNodeId(target) {
+    if (target.id) {
+      return;
+    }
+    const id = Math.floor((Math.random() * 100000) + 1);
+    target.id = `paperAutocompleteInput${id}`;
+  }
+  /**
+   * Setups relavent aria attributes in the target input.
+   * @param {HTMLElement} target An element to set attribute on to
+   */
+  _setupTargetAria(target) {
+    this._ensureNodeId(this);
+    target.setAttribute('aria-autocomplete', 'list');
+    target.setAttribute('autocomplete', 'off');
+    target.setAttribute('aria-haspopup', 'true');
+    target.setAttribute('aria-controls', this.id);
   }
   /**
    * Handler for target input change.
@@ -490,9 +407,9 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
     if (!this.isAttached || !this._oldTarget) {
       return;
     }
-    const value = this._oldTarget.value;
+    let value = this._oldTarget.value;
     if (typeof value !== 'string') {
-      return;
+      value = String(value);
     }
     if (this._previousQuery) {
       if (value.indexOf(this._previousQuery) === 0) {
@@ -501,15 +418,14 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
         return;
       } else {
         // this is a new query
-        this._previousQuery = null;
         this._suggestions = [];
       }
     }
     this._disaptchQuery(value);
     this._previousQuery = value;
     this._filterSuggestions();
-    this._loading = true;
     if (this.loader) {
+      this._loading = true;
       this.opened = true;
     }
   }
@@ -543,7 +459,7 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
     const query = this._previousQuery ? this._previousQuery.toLowerCase() : '';
     const filter = function(item) {
       const value = (typeof item === 'string') ? item : item.value;
-      return value.toLowerCase().indexOf(query) !== -1;
+      return String(value).toLowerCase().indexOf(query) !== -1;
     };
     const filtered = query ? source.filter(filter) : source;
     if (filtered.length === 0) {
@@ -551,8 +467,8 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
       return;
     }
     filtered.sort(function(a, b) {
-      const valueA = (typeof a === 'string') ? a : a.value;
-      const valueB = (typeof b === 'string') ? b : b.value;
+      const valueA = (typeof a === 'string') ? a : String(a.value);
+      const valueB = (typeof b === 'string') ? b : String(b.value);
       const lowerA = valueA.toLowerCase();
       const lowerB = valueB.toLowerCase();
       const aIndex = lowerA.indexOf(query);
@@ -616,6 +532,7 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
     }
     const index = _selector.selected;
     let value = suggestions[index];
+    this.selected = value;
     if (typeof value !== 'string' && typeof value.value !== 'undefined') {
       value = value.value;
     }
@@ -710,6 +627,18 @@ export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitE
    */
   _selectedHandler(e) {
     this.selectedItem = e.detail.value;
+    const item = e.target.selectedItem;
+    this._toggleAriaSelected(item);
+  }
+
+  _toggleAriaSelected(item) {
+    const node = this.shadowRoot.querySelector(`[aria-selected="true"]`);
+    if (node) {
+      node.setAttribute('aria-selected', 'false');
+    }
+    if (item) {
+      item.setAttribute('aria-selected', 'true');
+    }
   }
 }
 /**

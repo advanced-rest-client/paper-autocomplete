@@ -62,6 +62,9 @@ class DemoPage {
   get positionedField() {
     return document.getElementById('positionedField');
   }
+  get fruitsSibling() {
+    return document.getElementById('fruitsSibling');
+  }
 
   get queryCounter() {
     return this._queryCounter;
@@ -69,7 +72,8 @@ class DemoPage {
 
   set queryCounter(value) {
     this._queryCounter = value;
-    document.getElementById('queryCounter').innerText = value;
+    document.getElementById('queryCounter')
+        .innerText = value;
   }
 
   get selectedCounter() {
@@ -78,7 +82,8 @@ class DemoPage {
 
   set selectedCounter(value) {
     this._selectedCounter = value;
-    document.getElementById('selectedCounter').innerText = value;
+    document.getElementById('selectedCounter')
+        .innerText = value;
   }
 
   constructor() {
@@ -92,7 +97,14 @@ class DemoPage {
   }
 
   init() {
-    const { fruitsSuggestions, fruitsSuggestions2, fruitExternal, fruitsPositioned, positionedField } = this;
+    const {
+      fruitsSuggestions,
+      fruitsSuggestions2,
+      fruitExternal,
+      fruitsPositioned,
+      positionedField,
+      fruitsSibling
+    } = this;
     fruitsSuggestions.source = suggestions;
     fruitsSuggestions.onquery = this._queryCalled.bind(this);
     fruitsSuggestions.onselected = this._selectedCalled.bind(this);
@@ -107,6 +119,8 @@ class DemoPage {
     fruitsPositioned.target = positionedField;
     fruitsPositioned.positionTarget = positionedField;
     fruitsPositioned.source = suggestions;
+
+    fruitsSibling.source = suggestions;
   }
 
   _queryCalled() {
@@ -118,7 +132,9 @@ class DemoPage {
   }
 
   _asyncSuggestions(e) {
-    const { value } = e.detail;
+    const {
+      value
+    } = e.detail;
     setTimeout(() => {
       const suggestions = [];
       for (let i = 0; i < 25; i++) {
@@ -156,12 +172,14 @@ class DemoPage {
   }
 
   render() {
-    render(html`<div class="form">
+    render(html `<div class="form">
     ${list.map((item, index) => html`<div class="form-row relative">
-      <input
+      <paper-input
         type="text"
         placeholder="Fruit name"
-        data-index="${index}" .value="${item.name}" @focus="${this.inputFocus}" @input="${this.inputHandler}">
+        data-index="${index}"
+        .value="${item.name}"
+        @focus="${this.inputFocus}" @input="${this.inputHandler}"></paper-input>
       <paper-button title="Remove fruit" data-index="${index}" @click="${this.removeItem}">remove</paper-button>
       <paper-autocomplete openonfocus .source="${suggestions}"></paper-autocomplete>
     </div>`)}
