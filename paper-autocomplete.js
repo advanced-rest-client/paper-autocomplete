@@ -13,18 +13,15 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 License for the specific language governing permissions and limitations under
 the License.
 */
-import {PolymerElement} from '../../@polymer/polymer/polymer-element.js';
-import {afterNextRender} from '../../@polymer/polymer/lib/utils/render-status.js';
-import {IronOverlayBehavior} from '../../@polymer/iron-overlay-behavior/iron-overlay-behavior.js';
-import {IronScrollTargetBehavior} from '../../@polymer/iron-scroll-target-behavior/iron-scroll-target-behavior.js';
-import {html} from '../../@polymer/polymer/lib/utils/html-tag.js';
-import {mixinBehaviors} from '../../@polymer/polymer/lib/legacy/class.js';
-import '../../@polymer/paper-item/paper-item.js';
-import '../../@polymer/paper-ripple/paper-ripple.js';
-import '../../@polymer/paper-styles/shadow.js';
-import '../../@polymer/iron-selector/iron-selector.js';
-import '../../@polymer/iron-a11y-keys/iron-a11y-keys.js';
-import '../../@polymer/paper-progress/paper-progress.js';
+import { LitElement, html, css } from 'lit-element';
+import { ArcScrollTargetMixin } from '@advanced-rest-client/arc-scroll-target-mixin/arc-scroll-target-mixin.js';
+import { ArcOverlayMixin } from '@advanced-rest-client/arc-overlay-mixin/arc-overlay-mixin.js';
+import '@polymer/paper-item/paper-item.js';
+import '@polymer/paper-ripple/paper-ripple.js';
+import '@polymer/paper-styles/shadow.js';
+import '@polymer/iron-selector/iron-selector.js';
+import '@polymer/iron-a11y-keys/iron-a11y-keys.js';
+import '@polymer/paper-progress/paper-progress.js';
 /**
  * # `<paper-autocomplete>`
  *
@@ -121,49 +118,53 @@ import '../../@polymer/paper-progress/paper-progress.js';
  * @polymer
  * @demo demo/index.html
  */
-export class PaperAutocomplete extends
-  mixinBehaviors(
-    [IronOverlayBehavior, IronScrollTargetBehavior], PolymerElement) {
-  static get template() {
-    return html`
-    <style>
-    :host {
+export class PaperAutocomplete extends ArcOverlayMixin(ArcScrollTargetMixin(LitElement)) {
+  static get styles() {
+    return css`:host {
       position: absolute !important;
       left: 0px;
       top: 52px;
-      @apply --paper-autocomplete;
     }
 
     .dropdown-container {
       overflow: auto;
-      box-shaddow: --box-shadow-4dp;
-      @apply --shadow-elevation-4dp;
+      box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
+                  0 1px 10px 0 rgba(0, 0, 0, 0.12),
+                  0 2px 4px -1px rgba(0, 0, 0, 0.4);
       background-color: var(--paper-autocomplete-background-color, #fff);
-    }
-    </style>
-    <div id="container" class="dropdown-container">
-      <paper-progress hidden\$="[[!_showLoader]]" indeterminate=""></paper-progress>
-      <iron-selector selected="{{selectedItem}}" id="selector">
-        <template is="dom-repeat" items="{{suggestions}}" id="repeater">
-          <paper-item>
-            <div>{{_suggestionDisplay(item)}}</div>
-            <paper-ripple></paper-ripple>
-          </paper-item>
-        </template>
-      </iron-selector>
-    </div>
-    <iron-a11y-keys id="a11y" target="[[target]]" keys="up" on-keys-pressed="selectPrevious"></iron-a11y-keys>
-    <iron-a11y-keys id="a11y" target="[[target]]" keys="down" on-keys-pressed="selectNext"></iron-a11y-keys>
-    <iron-a11y-keys id="a11y" target="[[target]]" keys="enter" on-keys-pressed="acceptSelection"></iron-a11y-keys>
-    <iron-a11y-keys id="a11y" target="[[_keyTarget]]" keys="up" on-keys-pressed="selectPrevious"></iron-a11y-keys>
-    <iron-a11y-keys id="a11y" target="[[_keyTarget]]" keys="down" on-keys-pressed="selectNext"></iron-a11y-keys>
-    <iron-a11y-keys id="a11y" target="[[_keyTarget]]" keys="enter" on-keys-pressed="acceptSelection"></iron-a11y-keys>
-`;
+    }`;
   }
 
-  static get is() {
-    return 'paper-autocomplete';
+  render() {
+    const { loader, _loading, selectedItem } = this;
+    let { _suggestions, noink, target } = this;
+    if (!_suggestions) {
+      _suggestions = [];
+    }
+    if (noink === undefined) {
+      noink = false;
+    }
+    if (typeof target === 'string') {
+      target = undefined;
+    }
+    const _showLoader = !!loader && !!_loading;
+    return html`<div class="dropdown-container">
+    ${_showLoader ? html`<paper-progress indeterminate></paper-progress>` : undefined}
+      <iron-selector .selected="${selectedItem}" @selected-changed="${this._selectedHandler}">
+      ${_suggestions.map((item) => html`<paper-item>
+        <div>${item.value || item}</div>
+        <paper-ripple ?noink="${noink}"></paper-ripple>
+      </paper-item>`)}
+      </iron-selector>
+    </div>
+    <iron-a11y-keys .target="${target}" keys="up" @keys-pressed="${this.selectPrevious}"></iron-a11y-keys>
+    <iron-a11y-keys .target="${target}" keys="down" @keys-pressed="${this.selectNext}"></iron-a11y-keys>
+    <iron-a11y-keys .target="${target}" keys="enter" @keys-pressed="${this.acceptSelection}"></iron-a11y-keys>
+    <iron-a11y-keys .target="${this}" keys="up" @keys-pressed="${this.selectPrevious}"></iron-a11y-keys>
+    <iron-a11y-keys .target="${this}" keys="down" @keys-pressed="${this.selectNext}"></iron-a11y-keys>
+    <iron-a11y-keys .target="${this}" keys="enter" @keys-pressed="${this.acceptSelection}"></iron-a11y-keys>`;
   }
+
   static get properties() {
     return {
       /**
@@ -177,95 +178,230 @@ export class PaperAutocomplete extends
        *
        * @type {Array<Object>|Array<String>}
        */
-      source: {
-        type: Array
-      },
+      source: { type: Array },
       /**
        * `value` Selected object from the suggestions
        */
-      value: {
-        type: Object,
-        notify: true
-      },
+      value: { type: Object },
       /**
-       * List of suggestion that are displayed.
+       * List of suggestion that are rendered.
        */
-      suggestions: {
-        type: Array,
-        value: [],
-        readOnly: true
-      },
+      _suggestions: { type: Array },
       /**
        * A target input field to observe.
        * @type {HTMLElement}
        */
-      target: HTMLElement,
+      target: { type: Object },
       /**
        * Currently selected item on a suggestions list.
        * @type {Number}
        */
-      selectedItem: {
-        type: Number,
-        value: 0
-      },
-      // Scroll target element
-      scrollTarget: {
-        type: HTMLElement
-      },
-      // Sizing target element.
-      sizingTarget: {
-        type: HTMLElement
-      },
+      selectedItem: { type: Number },
+      /**
+       * Scroll target element
+       * @type {HTMLElement}
+       */
+      scrollTarget: { type: Object },
+      /**
+       * Sizing target element.
+       * @type {HTMLElement}
+       */
+      sizingTarget: { type: Object },
       /**
        * True when user query changed and waiting for `source` property update
        */
-      loading: {
-        type: Boolean,
-        value: false,
-        readOnly: true,
-        notify: true
-      },
+      _loading: { type: Boolean },
       /**
        * Set this to true if you use async operation in response for query event.
        * This will display a loader when querying for more suggestions.
        * Do not use it it you do not handle suggestions asynchronously.
        */
-      loader: {
-        type: Boolean,
-        value: false
-      },
+      loader: { type: Boolean, reflect: true },
 
-      _showLoader: {
-        type: Boolean,
-        computed: '_computeShowLoader(loader, loading)'
-      },
-
-      isAttached: Boolean,
-
-      // If true it will opend suggestions on input field focus.
-      openOnFocus: {
-        type: Boolean,
-        value: false
-      },
-      // this property is set when the `target` changes. It is used to remove
-      // listeners.
-      _oldTarget: HTMLElement,
-      // An event target for key down event.
-      _keyTarget: {
-        type: HTMLElement,
-        value: function() {
-          return this;
-        }
-      }
+      isAttached: { type: Boolean },
+      /**
+       * If true it will opend suggestions on input field focus.
+       */
+      openOnFocus: { type: Boolean },
+      /**
+       * this property is set when the `target` changes. It is used to remove
+       * listeners.
+       * @type {HTMLElement}
+       */
+      _oldTarget: { type: Object },
+      // Compatibility with polymer attributes
+      _oldOpenOnFocus: { type: Boolean, attribute: 'open-on-focus' },
+      _oldSizingTarget: { type: Boolean, attribute: 'sizing-target' },
+      _oldScrollTarget: { type: Boolean, attribute: 'scroll-target' },
+      _oldSelectedItem: { type: Boolean, attribute: 'selected-item' }
     };
   }
 
-  static get observers() {
-    return [
-      '_targetChanged(target, isAttached)',
-      '_filterSuggestions(source, _oldTarget, isAttached)'
-    ];
+  get value() {
+    return this._value;
   }
+
+  set value(value) {
+    const old = this._value;
+    if (old === value) {
+      return;
+    }
+    this._value = value;
+    this.dispatchEvent(new CustomEvent('value-chanegd', {
+      detail: {
+        value
+      }
+    }));
+  }
+  /**
+   * @return {Array<String>|Array<Object>} List of suggestion that are rendered.
+   */
+  get suggestions() {
+    return this._suggestions;
+  }
+  /**
+   * @return {Boolean} True when user query changed and waiting for `source` property update
+   */
+  get loading() {
+    return this._loading;
+  }
+
+  get _loading() {
+    return this.__loading;
+  }
+
+  set _loading(value) {
+    const old = this.__loading;
+    if (old === value) {
+      return;
+    }
+    this.__loading = value;
+    this.requestUpdate('_loading', value);
+    this.dispatchEvent(new CustomEvent('loading-chanegd', {
+      detail: {
+        value
+      }
+    }));
+  }
+
+  get _oldOpenOnFocus() {
+    return this.openOnFocus;
+  }
+
+  set _oldOpenOnFocus(value) {
+    this.openOnFocus = value;
+  }
+
+  get _oldSizingTarget() {
+    return this.sizingTarget;
+  }
+
+  set _oldSizingTarget(value) {
+    this.sizingTarget = value;
+  }
+
+  get _oldScrollTarget() {
+    return this.scrollTarget;
+  }
+
+  set _oldScrollTarget(value) {
+    this.scrollTarget = value;
+  }
+
+  get _oldSelectedItem() {
+    return this.selectedItem;
+  }
+
+  set _oldSelectedItem(value) {
+    this.selectedItem = value;
+  }
+
+  get target() {
+    return this._target;
+  }
+
+  set target(value) {
+    const old = this._target;
+    if (old === value) {
+      return;
+    }
+    this._target = value;
+    this.requestUpdate('target', value);
+    this._targetChanged();
+  }
+
+  get isAttached() {
+    return this._isAttached;
+  }
+
+  set isAttached(value) {
+    const old = this._isAttached;
+    if (old === value) {
+      return;
+    }
+    this._isAttached = value;
+    this._targetChanged();
+    this._filterSuggestions();
+  }
+
+  get source() {
+    return this._source;
+  }
+
+  set source(value) {
+    const old = this._source;
+    if (old === value) {
+      return;
+    }
+    this._source = value;
+    this._filterSuggestions();
+  }
+
+  get _oldTarget() {
+    return this.__oldTarget;
+  }
+
+  set _oldTarget(value) {
+    const old = this.__oldTarget;
+    if (old === value) {
+      return;
+    }
+    this.__oldTarget = value;
+    this._filterSuggestions();
+  }
+  /**
+   * @return {Function} Previously registered handler for `query` event
+   */
+  get onquery() {
+    return this._onquery || null;
+  }
+  /**
+   * Registers a callback function for `query` event
+   * @param {Function} value A callback to register. Pass `null` or `undefined`
+   * to clear the listener.
+   */
+  set onquery(value) {
+    this._registerCallback('query', value);
+  }
+  /**
+   * @return {Function} Previously registered handler for `selected` event
+   */
+  get onselected() {
+    return this._onselected || null;
+  }
+  /**
+   * Registers a callback function for `selected` event
+   * @param {Function} value A callback to register. Pass `null` or `undefined`
+   * to clear the listener.
+   */
+  set onselected(value) {
+    this._registerCallback('selected', value);
+  }
+
+  get _selector() {
+    return this.shadowRoot.querySelector('iron-selector');
+  }
+
   /**
    * @constructor
    */
@@ -274,42 +410,54 @@ export class PaperAutocomplete extends
     this.acceptSelection = this.acceptSelection.bind(this);
     this._valueChanged = this._valueChanged.bind(this);
     this._targetFocus = this._targetFocus.bind(this);
-    this._targetClick = this._targetClick.bind(this);
+
+    this._suggestions = [];
+    this._loading = false;
+    this.loader = false;
+    this.openOnFocus = false;
   }
 
   connectedCallback() {
-    super.connectedCallback();
-    this.addEventListener('tap', this.acceptSelection);
+    if (super.connectedCallback) {
+      super.connectedCallback();
+    }
+    this.addEventListener('click', this.acceptSelection);
   }
 
   disconnectedCallback() {
-    super.disconnectedCallback();
-    this.removeEventListener('tap', this.acceptSelection);
+    if (super.disconnectedCallback) {
+      super.disconnectedCallback();
+    }
+    this.removeEventListener('click', this.acceptSelection);
   }
 
-  ready() {
-    super.ready();
-    const target = this.shadowRoot.querySelector('#container');
-    if (!this.scrollTarget) {
-      this.scrollTarget = target;
+  firstUpdated() {
+    const target = this.shadowRoot.querySelector('.dropdown-container');
+    this.scrollTarget = target;
+    this.sizingTarget = target;
+  }
+
+  _registerCallback(eventType, value) {
+    const key = `_on${eventType}`;
+    if (this[key]) {
+      this.removeEventListener(eventType, this[key]);
     }
-    if (!this.sizingTarget) {
-      this.sizingTarget = target;
+    if (typeof value !== 'function') {
+      this[key] = null;
+      return;
     }
-    this.resetFit();
+    this[key] = value;
+    this.addEventListener(eventType, value);
   }
 
   /**
    * Handler for target property change.
-   *
-   * @param {HTMLElement} target Target input element
-   * @param {Boolean} isAttached True if this element is attached to the DOM.
    */
-  _targetChanged(target, isAttached) {
+  _targetChanged() {
+    const { target, isAttached } = this;
     if (this._oldTarget) {
       this._oldTarget.removeEventListener('input', this._valueChanged);
       this._oldTarget.removeEventListener('focus', this._targetFocus);
-      this._oldTarget.removeEventListener('click', this._targetClick);
       this._oldTarget = null;
     }
     if (!isAttached || !target) {
@@ -317,18 +465,24 @@ export class PaperAutocomplete extends
     }
     this.resetFit();
     if (typeof target === 'string') {
-      throw new Error('Target must be an element');
+      const parent = this.parentElement;
+      if (!parent || !parent.querySelector) {
+        return;
+      }
+      const node = parent.querySelector(target);
+      if (node) {
+        this.target = node;
+        return;
+      }
     } else if (target) {
       target.addEventListener('input', this._valueChanged);
       target.addEventListener('focus', this._targetFocus);
-      target.addEventListener('click', this._targetClick);
       this._oldTarget = target;
       if (target === document.activeElement) {
         this._targetFocus();
       }
     }
   }
-
   /**
    * Handler for target input change.
    */
@@ -348,16 +502,16 @@ export class PaperAutocomplete extends
       } else {
         // this is a new query
         this._previousQuery = null;
-        this._setSuggestions([]);
+        this._suggestions = [];
       }
     }
     this._disaptchQuery(value);
     this._previousQuery = value;
-    if (!this.opened) {
-      this.selectedItem = 0;
-    }
     this._filterSuggestions();
-    this._setLoading(true);
+    this._loading = true;
+    if (this.loader) {
+      this.opened = true;
+    }
   }
   /**
    * Disaptches query event and returns it.
@@ -380,10 +534,10 @@ export class PaperAutocomplete extends
     if (!this.isAttached || !this._oldTarget || this._previousQuery === undefined) {
       return;
     }
-    this._setLoading(false);
+    this._loading = false;
     const source = this.source;
     if (!source) {
-      this._setSuggestions([]);
+      this._suggestions = [];
       return;
     }
     const query = this._previousQuery ? this._previousQuery.toLowerCase() : '';
@@ -420,50 +574,48 @@ export class PaperAutocomplete extends
       }
       return valueA.localeCompare(valueB);
     });
-    this._setSuggestions(filtered);
+    this._suggestions = filtered;
     this.notifyResize();
-    this._ensureSelection();
     this.opened = true;
-  }
-  /* Compute suggestion display value */
-  _suggestionDisplay(item) {
-    return item.value || item;
   }
   /**
    * Highlight previous suggestion
    */
   selectPrevious() {
-    if (!this.suggestions || !this.suggestions.length) {
+    const { suggestions } = this;
+    if (!suggestions || !suggestions.length) {
       return;
     }
     if (!this.opened) {
       this.opened = true;
     }
-    this.$.selector.selectPrevious();
+    this._selector.selectPrevious();
     this.ensureItemVisible(false);
   }
   /**
    * Highlight next suggestion
    */
   selectNext() {
-    if (!this.suggestions || !this.suggestions.length) {
+    const { suggestions } = this;
+    if (!suggestions || !suggestions.length) {
       return;
     }
     if (!this.opened) {
       this.opened = true;
     }
-    this.$.selector.selectNext();
+    this._selector.selectNext();
     this.ensureItemVisible(true);
   }
   /**
    * Accepts currently selected suggestion and enters it into a text field.
    */
   acceptSelection() {
-    if (!this.opened || !this.suggestions || !this.suggestions.length ||
-      !this.$.selector.selectedItem) {
+    const { suggestions, _selector, opened } = this;
+    if (!opened || !suggestions || !suggestions.length || !_selector.selectedItem) {
       return;
     }
-    let value = this.$.repeater.itemForElement(this.$.selector.selectedItem);
+    const index = _selector.selected;
+    let value = suggestions[index];
     if (typeof value !== 'string' && typeof value.value !== 'undefined') {
       value = value.value;
     }
@@ -503,7 +655,7 @@ export class PaperAutocomplete extends
       return;
     }
     const container = this.scrollTarget;
-    const index = this.$.selector.selected;
+    const index = this._selector.selected;
     if (bottom && index === 0) {
       this.scroll(0);
       return;
@@ -514,7 +666,7 @@ export class PaperAutocomplete extends
       this.scroll(0, toMove);
       return;
     }
-    const item = this.$.selector.selectedItem;
+    const item = this._selector.selectedItem;
     const containerOffsetHeight = bottom ? container.offsetHeight : 0;
     const itemOffsetHeight = bottom ? item.offsetHeight : 0;
     const visible = containerOffsetHeight + container.scrollTop;
@@ -528,16 +680,6 @@ export class PaperAutocomplete extends
     }
   }
   /**
-   * Computes value for `_showLoader` property.
-   *
-   * @param {Boolean} loader
-   * @param {Boolean} loading
-   * @return {Boolean} True if the loader should be rendered.
-   */
-  _computeShowLoader(loader, loading) {
-    return !!loader && !!loading;
-  }
-  /**
    * Handler for target element focus event.
    * Opens the autocomplete if `openOnFocus` is set.
    */
@@ -546,34 +688,28 @@ export class PaperAutocomplete extends
       return;
     }
     this.__autocompleteFocus = true;
-    afterNextRender(this, () => {
+    setTimeout(() => {
       this.__autocompleteFocus = false;
       this._valueChanged();
     });
   }
   /**
-   * Prohibits click event propagation when the overlay is opened so
-   * the overlay manager won't close it immidietly after focusing (with click
-   * event included) in the target field.
-   *
-   * @param {ClickEvent} e
+   * Overrides ArcOverlayMixin#_onCaptureClick. Cancels when the clock target is
+   * the input.
+   * @param {Event} e Original click event
    */
-  _targetClick(e) {
-    if (!this.opened) {
+  _onCaptureClick(e) {
+    if (e.target=== this._oldTarget) {
       return;
     }
-    e.stopPropagation();
-    e.stopImmediatePropagation();
+    super._onCaptureClick(e);
   }
   /**
-   * Selects a first available item after filtering results and missing
-   * selection.
+   * Handler for `selected-changed` event on `iron-selector`.
+   * @param {CustomEvent} e
    */
-  _ensureSelection() {
-    if (this.$.selector.selectedItem) {
-      return;
-    }
-    this.$.selector.selected = 0;
+  _selectedHandler(e) {
+    this.selectedItem = e.detail.value;
   }
 }
 /**
@@ -595,4 +731,4 @@ export class PaperAutocomplete extends
  * @event selected
  * @param {String} value Selected value
  */
-window.customElements.define(PaperAutocomplete.is, PaperAutocomplete);
+window.customElements.define('paper-autocomplete', PaperAutocomplete);
