@@ -12,100 +12,44 @@
 // tslint:disable:variable-name Describing an API that's defined elsewhere.
 // tslint:disable:no-any describes the API as best we are able today
 
+import {LitElement, html, css} from 'lit-element';
+
+import {ArcScrollTargetMixin} from '@advanced-rest-client/arc-scroll-target-mixin/arc-scroll-target-mixin.js';
+
+import {ArcOverlayMixin} from '@advanced-rest-client/arc-overlay-mixin/arc-overlay-mixin.js';
+
 export {PaperAutocomplete};
 
 declare namespace UiElements {
 
   /**
    * # `<paper-autocomplete>`
-   *
-   * Use `paper-autocomplete` to add autocomplete functionality to the input elements.
-   * It also works wilt polymer inputs.
-   *
-   * The element works with static list of suggestions or with dynamic (asynchronous)
-   * operation that require calling te backend or local datastore.
-   * In second case you should set `loader` property which will display a loader animation
-   * while results are loaded.
-   *
-   * You must associate suggestions with the input field. This can be done by passing
-   * an element reference to the `target` property.
-   *
-   * ## Example:
-   *
-   * ### Static suggestions
-   *
-   * ```html
-   * <paper-input label="Enter fruit name" id="fruits"></paper-input>
-   * <paper-autocomplete
-   *  id="fruitsSuggestions"
-   *  target="[[fruits]]"
-   *  on-selected="_fruitSelected"></paper-input-autocomplete>
-   *
-   * <script>
-   * document.querySelector('#fruitsSuggestions').source = ['Apple', 'Orange', 'Bananas'];
-   * < /script>
-   * ```
-   *
-   * ### Dynamic suggestions
-   *
-   * ```html
-   * <paper-input-container>
-   *  <label>Enter friut name</label>
-   *  <input is="iron-input" type="text" value="{{async::input}}" id="asyncField" />
-   * </paper-input-container>
-   * <paper-autocomplete loader id="fruitAsync" on-query="_asyncSuggestions"></paper-input-autocomplete>
-   *
-   * <script>
-   *  document.querySelector('#fruitAsync').target = document.querySelector('#asyncField');
-   *  document.querySelector('#fruitAsync').addEventListener('query', (e) => {
-   *    const query = e.detail.value;
-   *    asyncQuery(query, (suggestions) => {
-   *      document.querySelector('#fruitAsync').source = suggestions;
-   *    });
-   *  });
-   * < /script>
-   * ```
-   *
-   * ## Displaying the suggestions
-   *
-   * Suggestions array can be either an array of strings or objects.
-   * For strings, displayed in the list and inserted to the input field value is the same item.
-   *
-   * You can set different list item display value and value inserted into the field when the array contains
-   * onject. Each object must contain `value` and `display` properties where `value` property
-   * will be inserted into the text field and `display` will be used to display description inside the list.
-   *
-   * ## Query event
-   *
-   * The `query` event is fired when the user query change in the way so the element is
-   * not able to display suggestions properly.
-   * This means if the user add a letter to previously entered value the query event will not
-   * fire since it already have list of suggestion that should be used to filter suggestions from.
-   * And again when the user will delete a letter the element will still have list of
-   * source suggestions to filter suggestions from.
-   * However, if the user change the query entirely it will fire `query` event
-   * and the app will expect to `source` to change. Setting source is not mandatory.
-   *
-   * ## Preventing from changing the input value
-   *
-   * To prevent the element to update the value of the target input, listent for
-   * `selected` event and cancel it by calling `event.preventDefault()` function.
-   *
-   * ## Styling
-   *
-   * Suggestions are positioned absolutely! You must include relative positioned parent to contain the suggestion
-   * display in the same area.
-   * Use CSS properties to position the display in the left bottom corner of the input field.
-   *
-   * `<paper-autocomplete>` provides the following custom properties and mixins
-   * for styling:
-   *
-   * | Custom property | Description | Default |
-   * ----------------|-------------|----------
-   * | `--paper-autocomplete` | Mixin applied to the display | `{}` |
-   * | `--paper-autocomplete-background-color` | Background color of suggestions | `{}` |
    */
-  class PaperAutocomplete {
+  class PaperAutocomplete extends
+    ArcOverlayMixin(
+    ArcScrollTargetMixin(
+    Object)) {
+    readonly suggestions: Array<String|null>|Array<object|null>|null;
+    readonly loading: Boolean|null;
+
+    /**
+     * True when user query changed and waiting for `source` property update
+     */
+    _loading: boolean|null|undefined;
+
+    /**
+     * Compatibility with polymer attributes
+     */
+    _oldOpenOnFocus: boolean|null|undefined;
+    _oldSelectedItem: boolean|null|undefined;
+
+    /**
+     * A target input field to observe.
+     * It accepts an element which is the input with `value` property or
+     * an id of an element that is a child of the parent element of this node.
+     */
+    target: HTMLElement|String|null;
+    isAttached: boolean|null|undefined;
 
     /**
      * List of suggestions to display.
@@ -119,19 +63,18 @@ declare namespace UiElements {
     source: Array<object|null>|Array<String|null>|null;
 
     /**
-     * `value` Selected object from the suggestions
+     * this property is set when the `target` changes. It is used to remove
+     * listeners.
      */
-    value: object|null|undefined;
+    _oldTarget: HTMLElement|null;
+    onquery: Function|null;
+    onselected: Function|null;
+    readonly _selector: any;
 
     /**
-     * List of suggestion that are displayed.
+     * Selected object from the suggestions list.
      */
-    readonly suggestions: any[]|null|undefined;
-
-    /**
-     * A target input field to observe.
-     */
-    target: HTMLElement|null;
+    selected: object|null|undefined;
 
     /**
      * Currently selected item on a suggestions list.
@@ -139,19 +82,14 @@ declare namespace UiElements {
     selectedItem: Number|null;
 
     /**
+     * List of suggestion that are rendered.
+     */
+    _suggestions: any[]|null|undefined;
+
+    /**
      * Scroll target element
      */
-    scrollTarget: HTMLElement|null|undefined;
-
-    /**
-     * Sizing target element.
-     */
-    sizingTarget: HTMLElement|null|undefined;
-
-    /**
-     * True when user query changed and waiting for `source` property update
-     */
-    readonly loading: boolean|null|undefined;
+    scrollTarget: HTMLElement|String|null;
 
     /**
      * Set this to true if you use async operation in response for query event.
@@ -159,8 +97,6 @@ declare namespace UiElements {
      * Do not use it it you do not handle suggestions asynchronously.
      */
     loader: boolean|null|undefined;
-    readonly _showLoader: boolean|null|undefined;
-    isAttached: boolean|null|undefined;
 
     /**
      * If true it will opend suggestions on input field focus.
@@ -168,25 +104,40 @@ declare namespace UiElements {
     openOnFocus: boolean|null|undefined;
 
     /**
-     * listeners.
+     * When set it disables ripple effect when clicking on a suggestion.
      */
-    _oldTarget: HTMLElement|null|undefined;
-
-    /**
-     * An event target for key down event.
-     */
-    _keyTarget: HTMLElement|null|undefined;
+    noink: boolean|null|undefined;
+    render(): any;
     connectedCallback(): void;
     disconnectedCallback(): void;
-    ready(): void;
+    firstUpdated(): void;
+
+    /**
+     * Registers an event handler for given type
+     *
+     * @param eventType Event type (name)
+     * @param value The handler to register
+     */
+    _registerCallback(eventType: String|null, value: Function|null): void;
 
     /**
      * Handler for target property change.
-     *
-     * @param target Target input element
-     * @param isAttached True if this element is attached to the DOM.
      */
-    _targetChanged(target: HTMLElement|null, isAttached: Boolean|null): void;
+    _targetChanged(): void;
+
+    /**
+     * Generates an id on passed element.
+     *
+     * @param target An element to set id on to
+     */
+    _ensureNodeId(target: HTMLElement|null): void;
+
+    /**
+     * Setups relavent aria attributes in the target input.
+     *
+     * @param target An element to set attribute on to
+     */
+    _setupTargetAria(target: HTMLElement|null): void;
 
     /**
      * Handler for target input change.
@@ -204,11 +155,6 @@ declare namespace UiElements {
      * Filter `source` array for current value.
      */
     _filterSuggestions(): void;
-
-    /**
-     * Compute suggestion display value
-     */
-    _suggestionDisplay(item: any): any;
 
     /**
      * Highlight previous suggestion
@@ -245,30 +191,24 @@ declare namespace UiElements {
     ensureItemVisible(bottom: Boolean|null): void;
 
     /**
-     * Computes value for `_showLoader` property.
-     *
-     * @returns True if the loader should be rendered.
-     */
-    _computeShowLoader(loader: Boolean|null, loading: Boolean|null): Boolean|null;
-
-    /**
      * Handler for target element focus event.
      * Opens the autocomplete if `openOnFocus` is set.
      */
     _targetFocus(): void;
 
     /**
-     * Prohibits click event propagation when the overlay is opened so
-     * the overlay manager won't close it immidietly after focusing (with click
-     * event included) in the target field.
+     * Overrides ArcOverlayMixin#_onCaptureClick. Cancels when the clock target is
+     * the input.
+     *
+     * @param e Original click event
      */
-    _targetClick(e: ClickEvent|null): void;
+    _onCaptureClick(e: Event|null): void;
 
     /**
-     * Selects a first available item after filtering results and missing
-     * selection.
+     * Handler for `selected-changed` event on `iron-selector`.
      */
-    _ensureSelection(): void;
+    _selectedHandler(e: CustomEvent|null): void;
+    _toggleAriaSelected(item: any): void;
   }
 }
 

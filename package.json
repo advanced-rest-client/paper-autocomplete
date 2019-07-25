@@ -1,63 +1,84 @@
 {
+  "name": "@advanced-rest-client/paper-autocomplete",
   "description": "Paper autocomplete element to be used with paper-, iron- and regular inputs.",
+  "version": "3.1.0",
+  "license": "Apache-2.0",
+  "main": "paper-autocomplete.js",
   "keywords": [
     "web-component",
-    "polymer",
     "paper-autocomplete",
     "autocomplete",
     "suggestions"
+  ],
+  "authors": [
+    "Pawel Psztyc",
+    "The Advanced REST client authors <arc@mulesoft.com>"
+  ],
+  "contributors": [
+    "Pawel Psztyc <jarrodek@gmail.com>",
+    "The Advanced REST Client authors"
   ],
   "repository": {
     "type": "git",
     "url": "git://github.com/advanced-rest-client/paper-autocomplete.git"
   },
-  "homepage": "https://github.com/advanced-rest-client/paper-autocomplete/",
-  "name": "@advanced-rest-client/paper-autocomplete",
-  "version": "3.0.0",
-  "license": "Apache-2.0",
-  "authors": [
-    "Pawel Psztyc",
-    "The Advanced REST client authors <arc@mulesoft.com>"
-  ],
-  "scripts": {
-    "lint": "polymer lint paper-autocomplete.html",
-    "test-sauce": "polymer test --plugin sauce --job-name \"paper-autocomplete:local-test\"",
-    "test": "polymer test --plugin local",
-    "update-types": "gen-typescript-declarations --deleteExisting --outDir ."
-  },
-  "devDependencies": {
-    "@polymer/gen-typescript-declarations": "^1.6.1",
-    "@polymer/iron-component-page": "^4.0.0",
-    "@polymer/iron-demo-helpers": "^3.1.0",
-    "@polymer/iron-test-helpers": "^3.0.0",
-    "@polymer/paper-button": "^3.0.0",
-    "@polymer/paper-input": "^3.0.2",
-    "@polymer/test-fixture": "^4.0.2",
-    "@webcomponents/webcomponentsjs": "^2.2.10",
-    "chai": "^4.2.0",
-    "chance": "^1.0.18",
-    "mocha": "^5.2.0",
-    "sinon": "^7.3.2",
-    "wct-mocha": "^1.0.0"
-  },
   "bugs": {
     "url": "https://github.com/advanced-rest-client/paper-autocomplete/issues",
     "email": "arc@mulesoft.com"
   },
-  "main": "paper-autocomplete.js",
-  "contributors": [
-    "Pawel Psztyc <jarrodek@gmail.com>",
-    "The Advanced REST Client authors"
-  ],
   "dependencies": {
+    "@advanced-rest-client/arc-overlay-mixin": "^1.0.2",
+    "@advanced-rest-client/arc-scroll-target-mixin": "^1.0.2",
     "@polymer/iron-a11y-keys": "^3.0.0",
-    "@polymer/iron-overlay-behavior": "^3.0.0",
-    "@polymer/iron-scroll-target-behavior": "^3.0.0",
     "@polymer/iron-selector": "^3.0.0",
     "@polymer/paper-item": "^3.0.0",
     "@polymer/paper-progress": "^3.0.0",
     "@polymer/paper-ripple": "^3.0.0",
-    "@polymer/paper-styles": "^3.0.0",
-    "@polymer/polymer": "^3.2.0"
+    "lit-element": "^2.0.1"
+  },
+  "devDependencies": {
+    "@advanced-rest-client/arc-demo-helper": "^1.0.3",
+    "@advanced-rest-client/eslint-config": "^1.0.6",
+    "@advanced-rest-client/testing-karma-sl": "^1.0.2",
+    "@commitlint/cli": "^8.1.0",
+    "@commitlint/config-conventional": "^7.0.0",
+    "@open-wc/prettier-config": "^0.1.0",
+    "@open-wc/testing": "^2.1.2",
+    "@open-wc/testing-karma": "^3.1.2",
+    "@polymer/gen-typescript-declarations": "^1.6.2",
+    "@polymer/paper-button": "^3.0.0",
+    "@polymer/paper-input": "^3.0.2",
+    "@polymer/paper-toggle-button": "^3.0.1",
+    "chance": "^1.0.18",
+    "deepmerge": "^4.0.0",
+    "es-dev-server": "^1.5.0",
+    "husky": "^1.0.0",
+    "karma": "^4.2.0",
+    "lint-staged": "^8.0.0",
+    "sinon": "^7.2.3",
+    "web-animations-js": "^2.3.1",
+    "webpack-merge": "^4.1.5"
+  },
+  "scripts": {
+    "test": "karma start --coverage",
+    "update-types": "gen-typescript-declarations --deleteExisting --outDir .",
+    "start": "es-dev-server --app-index demo/index.html --node-resolve --open --watch",
+    "start:compatibility": "es-dev-server --app-index demo/index.html --compatibility all --node-resolve --open --watch",
+    "lint:eslint": "eslint --ext .js,.html .",
+    "format:eslint": "eslint --ext .js,.html . --fix",
+    "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
+    "format:prettier": "prettier \"**/*.js\" --write",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "format": "npm run format:eslint && npm run format:prettier",
+    "test:watch": "karma start --auto-watch=true --single-run=false",
+    "test:legacy": "karma start --legacy --coverage",
+    "test:legacy:watch": "karma start --legacy --auto-watch=true --single-run=false",
+    "test:sl": "karma start karma.sl.config.js --legacy --coverage"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
   }
 }
