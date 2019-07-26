@@ -183,3 +183,7 @@
 
 
 
+## [3.1.1](https://github.com/advanced-rest-client/paper-autocomplete/compare/2.0.2...3.1.1) (2019-07-26)
+
+
+
